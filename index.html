@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Clothing Shop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header & Profile -->
+    <header>
+        <h1>My Clothing Shop</h1>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <button class="cart-btn" onclick="toggleCart()">
+                🛒 ตะกร้า: <span id="cart-count">0</span> ชิ้น
+            </button>
+            
+            <!-- เมนูโปรไฟล์ Dropdown -->
+            <div class="user-profile-menu">
+                <img src="user.jpg" alt="User Profile" class="avatar-btn" onclick="toggleProfileMenu()">
+                <div id="profile-dropdown" class="profile-dropdown">
+                    <div class="profile-header">
+                        <p id="user-display">👤 ผู้ใช้งาน</p>
+                    </div>
+                    <ul class="dropdown-list">
+                        <li onclick="openProfileModal()"> ข้อมูลส่วนตัว</li>
+                        <li onclick="openAddressModal()"> ที่อยู่</li>
+                        <li onclick="openOrderHistoryModal()"> ประวัติการสั่งซื้อ</li>
+                        <li onclick="toggleCart()"> ตะกร้าของฉัน</li>
+                        <li class="logout-item" onclick="logout()"> ออกจากระบบ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+  <!-- Hero Banner โทนสีเทาดำเข้มแบบเดียวกับ Footer -->
+<section class="hero-banner" style="background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%); color: white; text-align: center; padding: 2.5rem 1rem; margin-bottom: 1.5rem; border-radius: 0 0 20px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem; border: none; color: #ffffff;"> Grand Sale ลดสูงสุด 50%</h1>
+    <p style="font-size: 1rem; opacity: 0.85; color: #dddddd;">เสื้อผ้าแฟชั่นคอลเลกชันใหม่ ช็อปเลยวันนี้ส่งฟรีทั่วไทย!</p>
+</section>
+
+<!-- แถบจุดเด่นบริการ (SVG Icon Style) -->
+<div style="max-width: 1200px; margin: 0 auto 2rem auto; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1.5rem; padding: 1.2rem 1rem; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #f0f0f0;">
+    
+    <!-- จัดส่งรวดเร็ว -->
+    <div style="display: flex; align-items: center; gap: 12px; text-align: left;">
+        <div style="width: 48px; height: 48px; background-color: #f5f5f7; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#222222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+        </div>
+        <div>
+            <strong style="display: block; font-size: 0.95rem; color: #111;">จัดส่งรวดเร็ว</strong>
+            <small style="color: #666; font-size: 0.8rem;">ได้รับสินค้าภายใน 1-3 วัน</small>
+        </div>
+    </div>
+
+    <!-- ชำระเงินปลอดภัย -->
+    <div style="display: flex; align-items: center; gap: 12px; text-align: left;">
+        <div style="width: 48px; height: 48px; background-color: #f5f5f7; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#222222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+        </div>
+        <div>
+            <strong style="display: block; font-size: 0.95rem; color: #111;">ชำระเงินปลอดภัย</strong>
+            <small style="color: #666; font-size: 0.8rem;">สแกน QR Code พร้อมเพย์</small>
+        </div>
+    </div>
+
+    <!-- เปลี่ยนไซส์ได้ -->
+    <div style="display: flex; align-items: center; gap: 12px; text-align: left;">
+        <div style="width: 48px; height: 48px; background-color: #f5f5f7; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#222222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
+        </div>
+        <div>
+            <strong style="display: block; font-size: 0.95rem; color: #111;">เปลี่ยนไซส์ได้</strong>
+            <small style="color: #666; font-size: 0.8rem;">ภายใน 7 วันหลังได้รับสินค้า</small>
+        </div>
+    </div>
+
+</div>
+
+    <!-- Content Container -->
+    <div class="container">
+        <h2 style="color: #ffffff;">หมวดหมู่สินค้า</h2>
+        
+        <!-- หมวดหมู่ -->
+        <div class="category-menu">
+            <button class="category-btn active" onclick="filterCategory('all', this)">ทั้งหมด</button>
+            <button class="category-btn" onclick="filterCategory('shirt', this)">เสื้อ</button>
+            <button class="category-btn" onclick="filterCategory('pants', this)">กางเกง</button>
+            <button class="category-btn" onclick="filterCategory('hat', this)">หมวก</button>
+        </div>
+
+        <!-- รายการสินค้า GRID -->
+        <div id="product-list" class="product-grid"></div>
+    </div>
+
+    <!-- Modal ตะกร้าสินค้า -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="toggleCart()">&times;</span>
+            <h2>🛒 ตะกร้าสินค้า</h2>
+            <div id="cart-items" style="margin: 1rem 0; max-height: 200px; overflow-y: auto;"></div>
+            <p style="font-weight: bold; margin-bottom: 1rem;">ราคารวม: <span id="total-price">0</span> บาท</p>
+            <button class="checkout-btn" onclick="checkout()">ชำระเงิน</button>
+        </div>
+    </div>
+
+    <!-- Modal ชำระเงิน -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <span class="close-btn" onclick="closePayment()">&times;</span>
+            <h2 style="color: #ff477e; margin-bottom: 0.5rem;">สแกนจ่ายเงิน</h2>
+            <p style="font-size: 1rem;">ยอดชำระ: <span id="pay-amount" style="color: #ff477e; font-weight: bold; font-size: 1.2rem;">0</span> บาท</p>
+            
+            <!-- ปุ่มเลือกธนาคารพร้อมโลโก้ -->
+            <div class="bank-selector" style="display: flex; justify-content: center; gap: 12px; margin: 15px 0;">
+                <button id="btn-kbank" class="bank-btn active kbank-style" onclick="switchBankQR('kbank')">
+                    <img src="กสิกร.jpg" alt="KBank Logo" class="bank-logo">
+                    <span>กสิกรไทย</span>
+                </button>
+                <button id="btn-scb" class="bank-btn scb-style" onclick="switchBankQR('scb')">
+                    <img src="scb.jpg" alt="SCB Logo" class="bank-logo">
+                    <span>ไทยพาณิชย์</span>
+                </button>
+            </div>
+
+            <!-- กล่อง QR Code กสิกรไทย -->
+            <div id="qr-box-kbank" class="qr-container" style="margin: 1rem 0;">
+                <img id="qr-kbank-img" src="" alt="KBank PromptPay QR" style="width: 200px; height: 200px; border-radius: 12px; border: 1px solid #eee;">
+                <p style="font-size: 0.85rem; color: #138f2d; font-weight: bold; margin-top: 8px;">ธนาคารกสิกรไทย: 076-2-79099-8</p>
+                <p style="font-size: 0.85rem; color: #333; font-weight: bold; margin-top: 2px;">ชื่อบัญชี: บริษัท My Clothing Shop จำกัด</p>
+            </div>
+
+            <!-- กล่อง QR Code ไทยพาณิชย์ -->
+            <div id="qr-box-scb" class="qr-container" style="margin: 1rem 0; display: none;">
+                <img id="qr-scb-img" src="" alt="SCB PromptPay QR" style="width: 200px; height: 200px; border-radius: 12px; border: 1px solid #eee;">
+                <p style="font-size: 0.85rem; color: #4e2e80; font-weight: bold; margin-top: 8px;">ธนาคารไทยพาณิชย์: 000-1-20602-0</p>
+                <p style="font-size: 0.85rem; color: #333; font-weight: bold; margin-top: 2px;">ชื่อบัญชี: บริษัท My Clothing Shop จำกัด</p>
+            </div>
+
+            <!-- โครงสร้างแนบสลิป -->
+            <div class="slip-upload-section">
+                <label for="slip-input" class="upload-label" id="upload-label-text">
+                     เลือกรูปสลิปโอนเงิน
+                </label>
+                <input type="file" id="slip-input" accept="image/*" onchange="previewSlip(event)">
+                
+                <div id="slip-preview-container" style="display: none;">
+                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">ตัวอย่างสลิปที่แนบ:</p>
+                    <img id="slip-preview" src="" alt="Slip Preview">
+                </div>
+            </div>
+
+            <button class="confirm-btn" onclick="confirmPayment()">ยืนยันการชำระเงิน</button>
+        </div>
+    </div>
+
+    <!-- Modal ใบเสร็จ -->
+    <div id="receipt-modal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <div class="success-icon"></div>
+            <h2>สั่งซื้อสำเร็จ!</h2>
+            <div class="receipt-box">
+                <div id="receipt-items-list"></div>
+                <hr style="margin: 0.5rem 0; border: none; border-top: 1px dashed #ccc;">
+                <div class="receipt-row total">
+                    <span>ยอดรวมทั้งหมด:</span>
+                    <span id="receipt-total-price">0 บาท</span>
+                </div>
+                <div class="receipt-slip-container">
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 8px;">หลักฐานการโอนเงิน:</p>
+                    <img id="receipt-slip-img" src="" alt="Receipt Slip">
+                </div>
+            </div>
+            <button class="confirm-btn" onclick="closeReceipt()" style="margin-top: 1rem;">ปิดหน้าต่าง</button>
+        </div>
+    </div>
+
+    <!-- 🟢 Modal ประวัติการสั่งซื้อ (เพิ่มใหม่) -->
+    <div id="order-history-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px; text-align: left;">
+            <span class="close-btn" onclick="closeOrderHistoryModal()">&times;</span>
+            <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #111;">📜 ประวัติการสั่งซื้อของฉัน</h2>
+            <div id="order-history-list" style="max-height: 380px; overflow-y: auto; padding-right: 5px;"></div>
+        </div>
+    </div>
+
+    <!-- Modal ข้อมูลส่วนตัว -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content profile-card-modal">
+            <span class="close-btn" onclick="closeProfileModal()">&times;</span>
+            <h2 style="font-size: 1.2rem; text-align: center; margin-bottom: 1.2rem; color: #111;">แก้ไขข้อมูลส่วนตัว</h2>
+            
+            <form id="profile-form" onsubmit="saveProfileData(event)">
+                <div class="profile-form-group">
+                    <label>ชื่อ - นามสกุล</label>
+                    <input type="text" id="profile-fullname" class="profile-input-box" placeholder="กรอกชื่อ-นามสกุล" required>
+                </div>
+                <div class="profile-form-group">
+                    <label>หมายเลขโทรศัพท์</label>
+                    <div class="phone-input-container">
+                        <span class="country-code">TH +66 ▾</span>
+                        <input type="tel" id="profile-phone" placeholder="971912015" required>
+                    </div>
+                </div>
+                <div class="profile-form-group">
+                    <label>อีเมล</label>
+                    <input type="email" id="profile-email" class="profile-input-box" placeholder="example@email.com" required>
+                </div>
+                <div class="profile-form-group">
+                    <label>เพศ</label>
+                    <div class="gender-select-group">
+                        <label class="gender-option"><input type="radio" name="gender" value="male" checked> ชาย</label>
+                        <label class="gender-option"><input type="radio" name="gender" value="female"> หญิง</label>
+                        <label class="gender-option"><input type="radio" name="gender" value="other"> อื่นๆ</label>
+                    </div>
+                </div>
+                <div class="profile-form-group">
+                    <label>วันเกิด</label>
+                    <input type="date" id="profile-birthdate" class="profile-input-box">
+                </div>
+                <button type="submit" class="btn-save-profile">บันทึกข้อมูลส่วนตัว</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal แก้ไขที่อยู่ -->
+    <div id="address-modal" class="modal">
+        <div class="modal-content address-card-modal">
+            <span class="close-btn" onclick="closeAddressModal()">&times;</span>
+            <h2 style="font-size: 1.2rem; text-align: center; margin-bottom: 1.2rem; color: #111;">แก้ไขที่อยู่</h2>
+            
+            <form id="address-form" onsubmit="saveAddressData(event)">
+                <div class="address-form-group">
+                    <label>ชื่อ</label>
+                    <input type="text" id="addr-name" class="address-input-box" placeholder="กรอกชื่อ-นามสกุล" required>
+                </div>
+                <div class="address-form-group">
+                    <label>หมายเลขโทรศัพท์</label>
+                    <div class="phone-input-container">
+                        <span class="country-code">TH +66 ▾</span>
+                        <input type="tel" id="addr-phone" placeholder="971912015" required>
+                    </div>
+                </div>
+                <div class="address-form-group">
+                    <label>ที่อยู่</label>
+                    <textarea id="addr-main" class="address-input-box" rows="2" placeholder="บ้านเลขที่, ถนน, แขวง/ตำบล, เขต/อำเภอ, จังหวัด, รหัสไปรษณีย์" required></textarea>
+                </div>
+                <div class="map-confirm-box">
+                    <div class="map-title"><span>📍</span> ยืนยันตำแหน่งในแผนที่ของฉัน</div>
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15513.30023839086!2d100.6523162621085!3d13.576941396910827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d58d8effe1a45%3A0x2ec3594a0bf99858!2z4Lir4Lih4Li54LmI4Lia4LmJ4Liy4LiZ4LiB4Lil4LmI4Lit4Lih4Lie4Li04Lij4Li44LiTIOC4leC4s-C4muC4pSDguYHguJ7guKPguIHguKnguLIg4Lit4Liz4LmA4Lig4Lit4LmA4Lih4Li34Lit4LiH4Liq4Lih4Li44LiX4Lij4Lib4Lij4Liy4LiB4Liy4LijIOC4quC4oeC4uOC4l-C4o-C4m-C4o-C4suC4geC4suC4oyAxMDI4MCDguJvguKPguLDguYDguJfguKjguYTguJfguKI!5e0!3m2!1sth!2sus!4v1787472808103!5m2!1sth!2sus" 
+                        width="100%" 
+                        height="160" 
+                        style="border:0; border-radius: 12px; margin-top: 8px;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="strict-origin-when-cross-origin">
+                    </iframe>
+                </div>
+                <div class="address-form-group">
+                    <label>รายละเอียดที่อยู่</label>
+                    <input type="text" id="addr-detail" class="address-input-box" placeholder="ป้อนรายละเอียดอื่น ๆ (ไม่บังคับ)">
+                </div>
+                <p class="privacy-notice">เมื่อคลิกบันทึก แสดงว่าคุณรับทราบว่าคุณได้อ่าน <a href="#">นโยบายความเป็นส่วนตัว</a> แล้ว</p>
+                <button type="submit" class="btn-save-address">บันทึก</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer ส่วนท้ายเว็บ -->
+    <footer style="background-color: #1a1a1a; color: #ccc; padding: 2.5rem 1rem 1rem 1rem; margin-top: 3rem; font-size: 0.9rem;">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+            <div>
+                <h3 style="color: #fff; margin-bottom: 0.8rem; border: none;">My Clothing Shop</h3>
+                <p>ร้านจำหน่ายเสื้อผ้าแฟชั่นคุณภาพสูง ตอบโจทย์ทุกสไตล์ที่เป็นคุณ</p>
+            </div>
+            <div>
+                <h4 style="color: #fff; margin-bottom: 0.8rem;">ติดต่อเรา</h4>
+                <p>📍 กรุงเทพมหานคร, ประเทศไทย</p>
+                <p>📞 02-123-4567</p>
+                <p>💬 Line: @myclothingshop</p>
+            </div>
+            <div>
+                <h4 style="color: #fff; margin-bottom: 0.8rem;">ติดตามเรา</h4>
+                <p>Facebook | Instagram | TikTok</p>
+            </div>
+        </div>
+        <hr style="border: 0; border-top: 1px solid #333; margin: 1.5rem 0 1rem 0;">
+        <p style="text-align: center; font-size: 0.8rem; color: #777;">© 2026 My Clothing Shop Co., Ltd. All rights reserved.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

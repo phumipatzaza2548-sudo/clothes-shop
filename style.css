@@ -1,0 +1,761 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Kanit', sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: #f1f5f9;
+}
+
+/* ==================== Header & Nav ==================== */
+header {
+    background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+    color: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid #333;
+}
+
+header h1 {
+    font-size: 1.6rem;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.cart-btn {
+    background: #ffffff;
+    color: #111111;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+.cart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+/* ==================== Container & Categories ==================== */
+.container {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* เปลี่ยนสีหัวข้อหมวดหมู่สินค้าเป็นสีขาว */
+.container h2 {
+    margin-bottom: 1rem;
+    color: #ffffff !important;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.category-menu {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.8rem;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    background-color: #242424;
+    border: 1px solid #3d3d3d;
+    color: #cbd5e1;
+    padding: 0.5rem 1.2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.category-btn:hover, .category-btn.active {
+    background: #ffffff;
+    color: #111111;
+    border-color: #ffffff;
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+/* ==================== Product Grid & Card ==================== */
+#product-list, .product-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+    gap: 1.5rem !important;
+}
+
+.product-card {
+    background: #1e1e1e;
+    border-radius: 16px;
+    padding: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #2d2d2d;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    border-color: #444;
+}
+
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 0.8rem;
+}
+
+.product-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+    color: #ffffff;
+}
+
+.product-card p, .product-card .price {
+    color: #ffffff; /* 🟢 เปลี่ยนเป็นสีขาวเรียบร้อยแล้ว */
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+}
+
+/* ปุ่มเพิ่มลงตะกร้า */
+button.add-btn, .product-card button {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+    border: 1px solid #ffffff !important;
+    padding: 0.6rem 1rem !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+button.add-btn:hover, .product-card button:hover {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border-color: #333333 !important;
+}
+
+/* ==================== Profile Menu & Dropdown ==================== */
+.user-profile-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    object-fit: cover;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+}
+
+.avatar-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Dropdown */
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: #1e1e1e;
+    min-width: 200px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    padding: 0.8rem 0;
+    z-index: 1000;
+    border: 1px solid #333;
+}
+
+.profile-dropdown.show {
+    display: block;
+}
+
+.profile-header {
+    padding: 0.5rem 1.2rem 0.8rem 1.2rem;
+    border-bottom: 1px solid #2d2d2d;
+    margin-bottom: 0.4rem;
+}
+
+.profile-header p {
+    margin: 0;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+}
+
+.dropdown-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-list li {
+    padding: 0.65rem 1.2rem;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    transition: background 0.2s ease;
+}
+
+.dropdown-list li:hover {
+    background-color: #2d2d2d;
+    color: #ffffff;
+}
+
+.dropdown-list li.logout-item {
+    border-top: 1px solid #2d2d2d;
+    margin-top: 0.4rem;
+    padding-top: 0.75rem;
+    color: #f87171;
+    font-weight: 500;
+}
+
+.dropdown-list li.logout-item:hover {
+    background-color: #3f1d1d;
+    color: #ef4444;
+}
+
+/* ==================== Modal (Pop-up) & Receipt ==================== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    color: #1e293b;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 420px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #94a3b8;
+}
+
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.remove-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.checkout-btn, .confirm-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: #111111;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.receipt-slip-container {
+    margin-top: 12px;
+    text-align: center;
+}
+
+.receipt-slip-container img, #receipt-slip-img {
+    max-width: 220px;
+    max-height: 280px;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    margin-top: 6px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}
+
+/* ==================== กล่องแนบสลิป ==================== */
+.slip-upload-section {
+    margin: 1.2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#slip-input {
+    display: none;
+}
+
+.upload-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #f8fafc;
+    color: #334155;
+    border: 2px dashed #cbd5e1;
+    padding: 0.8rem 1.5rem;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    width: 100%;
+    max-width: 280px;
+}
+
+.upload-label:hover {
+    background: #f1f5f9;
+    border-color: #64748b;
+    transform: translateY(-2px);
+}
+
+#slip-preview-container {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+#slip-preview {
+    max-width: 200px;
+    max-height: 250px;
+    border-radius: 12px;
+    border: 2px solid #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ==================== Auth Page (Login / Register) ==================== */
+.auth-body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #121212;
+    padding: 1rem;
+}
+
+.auth-card {
+    background: #1e1e1e;
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    border: 1px solid #2d2d2d;
+}
+
+.auth-card h2 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.auth-card p.subtitle {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.auth-form .input-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+.auth-form label {
+    display: block;
+    font-size: 0.88rem;
+    color: #cbd5e1;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #2a2a2a;
+    border: 1px solid #3d3d3d;
+    color: #ffffff;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.auth-form input:focus {
+    border-color: #ffffff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: #ffffff;
+    color: #111111;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.auth-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.auth-footer {
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.auth-footer a {
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ==================== ฟอร์มแก้ไขที่อยู่ ==================== */
+.address-card-modal {
+    max-width: 450px !important;
+    width: 90% !important;
+    padding: 1.5rem !important;
+    border-radius: 20px !important;
+    text-align: left !important;
+    background: #ffffff;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.address-form-group {
+    margin-bottom: 1.2rem;
+}
+
+.address-form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.4rem;
+}
+
+.address-input-box {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    color: #334155;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.address-input-box:focus {
+    background-color: #fff;
+    border-color: #111;
+}
+
+.phone-input-container {
+    display: flex;
+    align-items: center;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0 0.8rem;
+}
+
+.country-code {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1e293b;
+    padding-right: 0.8rem;
+    border-right: 1px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.phone-input-container input {
+    border: none;
+    background: transparent;
+    padding: 0.75rem 0.6rem;
+    width: 100%;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.map-confirm-box {
+    background-color: #f1f5f9;
+    border-radius: 16px;
+    padding: 0.8rem;
+    margin-bottom: 1.2rem;
+}
+
+.map-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 0.6rem;
+}
+
+.map-preview {
+    width: 100%;
+    height: 140px;
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+}
+
+.privacy-notice {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.privacy-notice a {
+    color: #111;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-save-address {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: #111827;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-save-address:hover {
+    background-color: #000;
+    transform: translateY(-1px);
+}
+
+/* ==================== ฟอร์มข้อมูลส่วนตัว ==================== */
+.profile-card-modal {
+    max-width: 450px !important;
+    width: 90% !important;
+    padding: 1.5rem !important;
+    border-radius: 20px !important;
+    text-align: left !important;
+    background: #ffffff;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.profile-form-group {
+    margin-bottom: 1.2rem;
+}
+
+.profile-form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.4rem;
+}
+
+.profile-input-box {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    color: #334155;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.profile-input-box:focus {
+    background-color: #fff;
+    border-color: #111;
+}
+
+.gender-select-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.gender-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0.65rem;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.gender-option input {
+    accent-color: #111;
+}
+
+.btn-save-profile {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: #111827;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-top: 1rem;
+    transition: all 0.2s ease;
+}
+
+.btn-save-profile:hover {
+    background-color: #000;
+}
+
+/* ==================== ตกแต่งปุ่มเลือกธนาคาร ==================== */
+.bank-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    background-color: #fff;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bank-logo {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+/* สไตล์เมื่อเลือก KBank (กสิกรไทย - สีเขียว) */
+.bank-btn.kbank-style.active {
+    border-color: #138f2d;
+    background-color: #e8f5e9;
+    color: #138f2d;
+}
+
+/* สไตล์เมื่อเลือก SCB (ไทยพาณิชย์ - สีม่วง) */
+.bank-btn.scb-style.active {
+    border-color: #4e2e80;
+    background-color: #f3e5f5;
+    color: #4e2e80;
+}
+
+.bank-btn:hover {
+    transform: translateY(-2px);
+}
+.input-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    color: #ffffff;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #2a2a2a;
+    border: 1px solid #444444;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    border-color: #ffffff;
+}

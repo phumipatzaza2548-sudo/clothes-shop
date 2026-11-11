@@ -3,59 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สมัครสมาชิก - My Clothing Shop</title>
+    <meta name="theme-color" content="#fbf9f4">
+    <title>สมัครสมาชิก — My Clothing Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="style.css">
 </head>
-<body style="background-color: #121212; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: sans-serif;">
+<body class="auth-body">
+    <div class="auth-shell">
+        <!-- Brand showcase -->
+        <aside class="auth-showcase">
+            <a class="brand auth-brand" href="shop.html" aria-label="My Clothing Shop หน้าแรก">
+                <span class="brand-mark">M</span>
+                <span class="brand-text">
+                    <span class="brand-name">My Clothing Shop</span>
+                    <span class="brand-sub">Essential Wear</span>
+                </span>
+            </a>
 
-    <div class="auth-card" style="background-color: #1e1e1e; padding: 2.5rem 2rem; border-radius: 16px; width: 100%; max-width: 380px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); text-align: center; color: white;">
-        
-        <h2 style="font-size: 1.8rem; margin-bottom: 0.3rem; color: #ffffff;">สมัครสมาชิก</h2>
-        <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 1.8rem;">สร้างบัญชีใหม่เพื่อเริ่มช็อปปิ้ง</p>
+            <div class="auth-showcase-body">
+                <span class="auth-eyebrow">Join the club</span>
+                <h1>เริ่มต้นสไตล์ใหม่<br><span>ในแบบของคุณ</span></h1>
+                <p>สมัครสมาชิกเพื่อเก็บข้อมูลการสั่งซื้อ จัดการที่อยู่ และช้อปได้รวดเร็วขึ้นในทุกครั้ง</p>
 
-        <form id="register-form" style="display: flex; flex-direction: column; gap: 1.2rem; text-align: left;">
-            
-            <!-- ชื่อผู้ใช้ -->
-            <div>
-                <label style="display: block; font-size: 0.9rem; margin-bottom: 0.4rem; font-weight: bold; color: #ddd;">ชื่อผู้ใช้</label>
-                <input type="text" id="reg-username" placeholder="ตั้งชื่อผู้ใช้" required style="width: 100%; padding: 0.75rem 1rem; background-color: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 0.95rem; box-sizing: border-box; outline: none;">
+                <ul class="auth-points">
+                    <li>
+                        <span class="auth-point-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"></path></svg>
+                        </span>
+                        สมัครฟรี ไม่มีค่าใช้จ่าย
+                    </li>
+                    <li>
+                        <span class="auth-point-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"></path></svg>
+                        </span>
+                        บันทึกที่อยู่เพื่อชำระเงินเร็วขึ้น
+                    </li>
+                    <li>
+                        <span class="auth-point-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"></path></svg>
+                        </span>
+                        ดูประวัติการสั่งซื้อได้ทุกเมื่อ
+                    </li>
+                </ul>
+
+                <div class="auth-collage" aria-hidden="true">
+                    <div class="auth-photo auth-photo-main"><img src="ฮุ้ดดี้.jpg" alt=""></div>
+                    <div class="auth-photo auth-photo-top"><img src="แก็บน้ำเงิน.jpg" alt=""></div>
+                    <div class="auth-photo auth-photo-bottom"><img src="Bagy.jpg" alt=""></div>
+                    <span class="auth-float">Member benefits</span>
+                </div>
             </div>
 
-            <!-- อีเมล -->
-            <div>
-                <label style="display: block; font-size: 0.9rem; margin-bottom: 0.4rem; font-weight: bold; color: #ddd;">อีเมล</label>
-                <input type="email" id="reg-email" placeholder="example@email.com" required style="width: 100%; padding: 0.75rem 1rem; background-color: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 0.95rem; box-sizing: border-box; outline: none;">
+            <p class="auth-showcase-footer">© 2026 My Clothing Shop Co., Ltd.</p>
+        </aside>
+
+        <!-- Form -->
+        <main class="auth-panel">
+            <div class="auth-form-wrap auth-form-wrap--register">
+                <a class="auth-mobile-brand" href="shop.html" aria-label="My Clothing Shop หน้าแรก">
+                    <span class="brand-mark">M</span>
+                    <span class="brand-text">
+                        <span class="brand-name">My Clothing Shop</span>
+                        <span class="brand-sub">Essential Wear</span>
+                    </span>
+                </a>
+
+                <span class="auth-kicker">Create account</span>
+                <h2>สมัครสมาชิก</h2>
+                <p class="auth-subtitle">กรอกข้อมูลด้านล่างเพื่อเริ่มช้อปและจัดการบัญชีของคุณ</p>
+
+                <div id="auth-message" class="auth-message" role="alert" aria-live="polite"></div>
+
+                <form id="register-form" class="auth-form" novalidate>
+                    <div class="form-field">
+                        <label for="reg-fullname">ชื่อ - นามสกุล</label>
+                        <div class="input-wrap">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+                            <input type="text" id="reg-fullname" name="fullname" placeholder="เช่น สมชาย ใจดี" autocomplete="name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="reg-username">ชื่อผู้ใช้</label>
+                        <div class="input-wrap">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+                            <input type="text" id="reg-username" name="username" placeholder="3–30 ตัวอักษร ไม่มีช่องว่าง" autocomplete="username" required>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="reg-email">อีเมล</label>
+                        <div class="input-wrap">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
+                            <input type="email" id="reg-email" name="email" placeholder="example@email.com" autocomplete="email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="reg-phone">เบอร์โทรศัพท์</label>
+                        <div class="input-wrap">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2Z"></path></svg>
+                            <input type="tel" id="reg-phone" name="phone" placeholder="0812345678" autocomplete="tel" inputmode="tel" required>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="reg-password">รหัสผ่าน</label>
+                        <div class="input-wrap">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+                            <input type="password" id="reg-password" name="password" placeholder="อย่างน้อย 6 ตัวอักษร" autocomplete="new-password" required>
+                            <button type="button" class="password-toggle" data-target="reg-password" aria-label="แสดงรหัสผ่าน">แสดง</button>
+                        </div>
+                        <div id="password-strength" class="password-strength">
+                            <div class="password-strength-track"><span id="password-strength-bar" class="password-strength-bar" data-level="0"></span></div>
+                            <small id="password-strength-text"></small>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="reg-confirm-password">ยืนยันรหัสผ่าน</label>
+                        <div class="input-wrap">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+                            <input type="password" id="reg-confirm-password" name="confirmPassword" placeholder="กรอกรหัสผ่านอีกครั้ง" autocomplete="new-password" required>
+                            <button type="button" class="password-toggle" data-target="reg-confirm-password" aria-label="แสดงรหัสผ่าน">แสดง</button>
+                        </div>
+                    </div>
+
+                    <p class="auth-terms">การสมัครสมาชิกถือว่าคุณยอมรับนโยบายความเป็นส่วนตัว และข้อกำหนดการใช้งานของร้านค้า</p>
+
+                    <button type="submit" class="auth-submit" id="register-submit">
+                        <span data-button-label>สมัครสมาชิก</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+                    </button>
+                </form>
+
+                <p class="auth-switch">มีบัญชีอยู่แล้ว? <a href="index.html">เข้าสู่ระบบ</a></p>
+                <p class="auth-note">ข้อมูลบัญชีถูกจัดเก็บไว้ในเบราว์เซอร์นี้เพื่อการสาธิต ไม่ได้ส่งไปยังเซิร์ฟเวอร์</p>
             </div>
-
-            <!-- เบอร์โทรศัพท์ -->
-            <div>
-                <label style="display: block; font-size: 0.9rem; margin-bottom: 0.4rem; font-weight: bold; color: #ddd;">เบอร์โทรศัพท์</label>
-                <input type="tel" id="reg-phone" placeholder="08X-XXX-XXXX" required style="width: 100%; padding: 0.75rem 1rem; background-color: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 0.95rem; box-sizing: border-box; outline: none;">
-            </div>
-
-            <!-- รหัสผ่าน -->
-            <div>
-                <label style="display: block; font-size: 0.9rem; margin-bottom: 0.4rem; font-weight: bold; color: #ddd;">รหัสผ่าน</label>
-                <input type="password" id="reg-password" placeholder="ตั้งรหัสผ่าน" required style="width: 100%; padding: 0.75rem 1rem; background-color: #2a2a2a; border: 1px solid #444; border-radius: 8px; color: #fff; font-size: 0.95rem; box-sizing: border-box; outline: none;">
-            </div>
-
-            <button type="submit" style="width: 100%; padding: 0.8rem; background-color: #ffffff; color: #111111; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; transition: 0.2s;">ยืนยันลงทะเบียน</button>
-        </form>
-
-        <p style="font-size: 0.85rem; color: #aaa; margin-top: 1.5rem;">
-            มีบัญชีอยู่แล้ว? <a href="login.html" style="color: #ffffff; text-decoration: underline; font-weight: bold;">เข้าสู่ระบบ</a>
-        </p>
+        </main>
     </div>
 
-    <!-- สคริปต์เมื่อกดลงทะเบียนแล้วเด้งไปหน้าเข้าสู่ระบบ -->
-    <script>
-        document.getElementById('register-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // ป้องกันหน้าเว็บรีเฟรช
-            
-            alert('ลงทะเบียนสำเร็จเรียบร้อยแล้ว!');
-            window.location.href = 'index.html'; // เด้งไปยังหน้าเข้าสู่ระบบ
-        });
-    </script>
-
+    <script src="store.js"></script>
+    <script src="auth.js"></script>
 </body>
 </html>

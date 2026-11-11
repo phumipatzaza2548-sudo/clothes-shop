@@ -3,50 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เข้าสู่ระบบ - My Clothing Shop</title>
+    <meta name="theme-color" content="#fbf9f4">
+    <title>เข้าสู่ระบบ — My Clothing Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="auth-body">
+    <div class="auth-shell">
+        <!-- Brand showcase -->
+        <aside class="auth-showcase">
+            <a class="brand auth-brand" href="shop.html" aria-label="My Clothing Shop หน้าแรก">
+                <span class="brand-mark">M</span>
+                <span class="brand-text">
+                    <span class="brand-name">My Clothing Shop</span>
+                    <span class="brand-sub">Essential Wear</span>
+                </span>
+            </a>
 
-    <div class="auth-card">
-        <h2>เข้าสู่ระบบ</h2>
-        <p class="subtitle">ยินดีต้อนรับกลับเข้าสู่ร้านค้า</p>
+            <div class="auth-showcase-body">
+                <span class="auth-eyebrow">Everyday essentials</span>
+                <h1>สไตล์ที่ใช่<br><span>สำหรับทุกวัน</span></h1>
+                <p>เสื้อผ้าและแอคเซสซอรีที่คัดสรรมาแล้ว ดีไซน์เรียบง่าย ใส่ได้จริงในทุกวัน</p>
 
-        <form class="auth-form" onsubmit="handleLogin(event)">
-            <div class="input-group">
-                <label for="username">ชื่อผู้ใช้</label>
-                <input type="text" id="username" placeholder="กรอกชื่อผู้ใช้" required>
+                <ul class="auth-points">
+                    <li>
+                        <span class="auth-point-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"></path></svg>
+                        </span>
+                        ส่งฟรีทั่วไทยเมื่อช้อปครบ 500 บาท
+                    </li>
+                    <li>
+                        <span class="auth-point-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"></path></svg>
+                        </span>
+                        เปลี่ยนไซส์ได้ภายใน 7 วัน
+                    </li>
+                    <li>
+                        <span class="auth-point-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"></path></svg>
+                        </span>
+                        ชำระเงินผ่าน PromptPay ปลอดภัย
+                    </li>
+                </ul>
+
+                <div class="auth-collage" aria-hidden="true">
+                    <div class="auth-photo auth-photo-main"><img src="Bagy.jpg" alt=""></div>
+                    <div class="auth-photo auth-photo-top"><img src="แก็บขาว.jpg" alt=""></div>
+                    <div class="auth-photo auth-photo-bottom"><img src="polo.jpg" alt=""></div>
+                    <span class="auth-float">New Collection 2026</span>
+                </div>
             </div>
-            <div class="input-group">
-                <label for="password">รหัสผ่าน</label>
-                <input type="password" id="password" placeholder="กรอกรหัสผ่าน" required>
-            </div>
-            <button type="submit" class="auth-btn">เข้าสู่ระบบ</button>
-        </form>
 
-        <div class="auth-footer">
-            ยังไม่มีบัญชีใช่ไหม? <a href="register.html">สมัครสมาชิก</a>
-        </div>
+            <p class="auth-showcase-footer">© 2026 My Clothing Shop Co., Ltd.</p>
+        </aside>
+
+        <!-- Form -->
+        <main class="auth-panel">
+            <div class="auth-form-wrap">
+                <a class="auth-mobile-brand" href="shop.html" aria-label="My Clothing Shop หน้าแรก">
+                    <span class="brand-mark">M</span>
+                    <span class="brand-text">
+                        <span class="brand-name">My Clothing Shop</span>
+                        <span class="brand-sub">Essential Wear</span>
+                    </span>
+                </a>
+
+                <span class="auth-kicker">Welcome back</span>
+                <h2>เข้าสู่ระบบ</h2>
+                <p class="auth-subtitle">เข้าสู่บัญชีเพื่อจัดการข้อมูล ที่อยู่ และประวัติการสั่งซื้อของคุณ</p>
+
+                <div id="auth-message" class="auth-message" role="alert" aria-live="polite"></div>
+
+                <form id="login-form" class="auth-form" novalidate>
+                    <div class="form-field">
+                        <label for="username">ชื่อผู้ใช้หรืออีเมล</label>
+                        <div class="input-wrap">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+                            <input type="text" id="username" name="username" placeholder="กรอกชื่อผู้ใช้หรืออีเมล" autocomplete="username" required>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="password">รหัสผ่าน</label>
+                        <div class="input-wrap">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>
+                            <input type="password" id="password" name="password" placeholder="กรอกรหัสผ่าน" autocomplete="current-password" required>
+                            <button type="button" class="password-toggle" data-target="password" aria-label="แสดงรหัสผ่าน">แสดง</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="auth-submit" id="login-submit">
+                        <span data-button-label>เข้าสู่ระบบ</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+                    </button>
+                </form>
+
+                <div class="demo-card">
+                    <div class="demo-copy">
+                        <span class="demo-badge">DEMO</span>
+                        <div>
+                            <strong>บัญชีทดลอง</strong>
+                            <span>demo / 123456</span>
+                        </div>
+                    </div>
+                    <button type="button" class="demo-btn" id="demo-login">เข้าใช้งาน</button>
+                </div>
+
+                <p class="auth-switch">ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิก</a></p>
+                <p class="auth-note">ข้อมูลบัญชีถูกจัดเก็บไว้ในเบราว์เซอร์นี้เพื่อการสาธิต ไม่ได้ส่งไปยังเซิร์ฟเวอร์</p>
+            </div>
+        </main>
     </div>
 
-    <script>
-        function handleLogin(e) {
-            e.preventDefault();
-            alert("เข้าสู่ระบบสำเร็จ!");
-            window.location.href = "index.html";
-        }
-    </script>
+    <script src="store.js"></script>
+    <script src="auth.js"></script>
 </body>
 </html>
-<script>
-    function handleLogin(e) {
-        e.preventDefault();
-        const username = document.getElementById("username").value;
-        
-        // บันทึกข้อมูลชื่อผู้ใช้
-        localStorage.setItem("currentUser", username);
-        
-        alert("เข้าสู่ระบบสำเร็จ!");
-        window.location.href = 'shop.html';
-    }
-</script>

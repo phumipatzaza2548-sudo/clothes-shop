@@ -1,224 +1,474 @@
-<!DOCTYPE html>
-<html lang="th">
+﻿<!DOCTYPE html>
+<html lang="th" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Clothing Shop</title>
+    <meta name="theme-color" content="#0e0e10">
+    <title>My Clothing Shop — เสื้อผ้าแฟชั่นพร้อมส่ง</title>
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem("shop_theme");
+                var theme = savedTheme === "light" ? "light" : "dark";
+                document.documentElement.setAttribute("data-theme", theme);
+                var themeColor = document.querySelector('meta[name="theme-color"]');
+                if (themeColor) {
+                    themeColor.setAttribute("content", theme === "light" ? "#f6f1e7" : "#0e0e10");
+                }
+            } catch (error) {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        })();
+    </script>
+    <style>
+        html[data-theme="dark"] { background-color: #0e0e10; color-scheme: dark; }
+        html[data-theme="light"] { background-color: #f6f1e7; color-scheme: light; }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Header & Profile -->
-    <header>
-        <h1>My Clothing Shop</h1>
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <button class="cart-btn" onclick="toggleCart()">
-                🛒 ตะกร้า: <span id="cart-count">0</span> ชิ้น
-            </button>
-            
-            <!-- เมนูโปรไฟล์ Dropdown -->
-            <div class="user-profile-menu">
-                <img src="user.jpg" alt="User Profile" class="avatar-btn" onclick="toggleProfileMenu()">
-                <div id="profile-dropdown" class="profile-dropdown">
-                    <div class="profile-header">
-                        <p id="user-display">👤 ผู้ใช้งาน</p>
+    <!-- ==================== Header ==================== -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="shop.html" aria-label="My Clothing Shop หน้าแรก">
+                <span class="brand-mark">M</span>
+                <span class="brand-text">
+                    <span class="brand-name">My Clothing Shop</span>
+                    <span class="brand-sub">Essential Wear</span>
+                </span>
+            </a>
+
+            <nav class="header-nav" aria-label="หมวดหมู่สินค้า">
+                <a href="#products" onclick="selectCategory('all'); return false;">สินค้าทั้งหมด</a>
+                <a href="#products" onclick="selectCategory('shirt'); return false;">เสื้อ</a>
+                <a href="#products" onclick="selectCategory('pants'); return false;">กางเกง</a>
+                <a href="#products" onclick="selectCategory('shoe'); return false;">รองเท้า</a>
+                <a href="#products" onclick="selectCategory('hat'); return false;">หมวก</a>
+            </nav>
+
+            <div class="header-actions">
+                <button
+                    type="button"
+                    class="theme-toggle-btn"
+                    id="theme-toggle-btn"
+                    onclick="toggleTheme()"
+                    aria-label="สลับเป็นธีมสว่าง"
+                    aria-pressed="false"
+                    title="สลับเป็นธีมสว่าง"
+                >
+                    <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path>
+                    </svg>
+                    <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+                    </svg>
+                </button>
+
+                <button class="cart-btn" onclick="toggleCart()" aria-label="เปิดตะกร้าสินค้า">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="9" cy="20" r="1.5"></circle>
+                        <circle cx="18" cy="20" r="1.5"></circle>
+                        <path d="M2 3h2.5l2.3 11.2a1.5 1.5 0 0 0 1.5 1.2h9.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
+                    </svg>
+                    <span class="cart-label">ตะกร้า</span>
+                    <span class="cart-count" id="cart-count" aria-live="polite">0</span>
+                </button>
+
+                <!-- เมนูโปรไฟล์ Dropdown -->
+                <div class="user-profile-menu">
+                    <button class="avatar-btn" onclick="toggleProfileMenu()" aria-label="เปิดเมนูโปรไฟล์">
+                        <img src="user.jpg" alt="รูปโปรไฟล์ผู้ใช้" id="avatar-img">
+                    </button>
+                    <div id="profile-dropdown" class="profile-dropdown">
+                        <div class="profile-header">
+                            <p id="user-display">👤 ผู้ใช้งาน</p>
+                            <span class="profile-sub" id="profile-sub">ยินดีต้อนรับกลับมา</span>
+                        </div>
+                        <ul class="dropdown-list">
+                            <li onclick="openProfileModal()">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+                                ข้อมูลส่วนตัว
+                            </li>
+                            <li onclick="openAddressModal()">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                ที่อยู่จัดส่ง
+                            </li>
+                            <li onclick="openOrderHistoryModal()">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2Z"></path><path d="M9 7h6M9 11h6M9 15h4"></path></svg>
+                                ประวัติการสั่งซื้อ
+                            </li>
+                            <li onclick="toggleCart()">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M2 3h2.5l2.3 11.2a1.5 1.5 0 0 0 1.5 1.2h9.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path></svg>
+                                ตะกร้าของฉัน
+                            </li>
+                            <li class="logout-item" onclick="logout()">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5M21 12H9"></path></svg>
+                                ออกจากระบบ
+                            </li>
+                        </ul>
                     </div>
-                    <ul class="dropdown-list">
-                        <li onclick="openProfileModal()"> ข้อมูลส่วนตัว</li>
-                        <li onclick="openAddressModal()"> ที่อยู่</li>
-                        <li onclick="openOrderHistoryModal()"> ประวัติการสั่งซื้อ</li>
-                        <li onclick="toggleCart()"> ตะกร้าของฉัน</li>
-                        <li class="logout-item" onclick="logout()"> ออกจากระบบ</li>
-                    </ul>
                 </div>
+
+                <button
+                    type="button"
+                    class="logout-icon-btn"
+                    id="header-logout-btn"
+                    onclick="logout()"
+                    aria-label="ออกจากระบบ"
+                    title="ออกจากระบบ"
+                    hidden
+                >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <path d="m16 17 5-5-5-5M21 12H9"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     </header>
 
-  <!-- Hero Banner โทนสีเทาดำเข้มแบบเดียวกับ Footer -->
-<section class="hero-banner" style="background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%); color: white; text-align: center; padding: 2.5rem 1rem; margin-bottom: 1.5rem; border-radius: 0 0 20px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-    <h1 style="font-size: 2rem; margin-bottom: 0.5rem; border: none; color: #ffffff;"> Grand Sale ลดสูงสุด 50%</h1>
-    <p style="font-size: 1rem; opacity: 0.85; color: #dddddd;">เสื้อผ้าแฟชั่นคอลเลกชันใหม่ ช็อปเลยวันนี้ส่งฟรีทั่วไทย!</p>
-</section>
+    <main>
+        <!-- ==================== Hero ==================== -->
+        <section class="hero">
+            <div class="hero-inner">
+                <div class="hero-copy">
+                    <span class="hero-eyebrow">New Collection 2026</span>
+                    <h1>แต่งตัวในสไตล์<br><span class="text-muted">ที่เป็นคุณ</span></h1>
+                    <p>คัดสรรเสื้อผ้า รองเท้า และแอคเซสซอรีคุณภาพดี ดีไซน์เรียบง่าย ใส่ได้ทุกวัน ในราคาที่เอื้อมถึง</p>
 
-<!-- แถบจุดเด่นบริการ (SVG Icon Style) -->
-<div style="max-width: 1200px; margin: 0 auto 2rem auto; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1.5rem; padding: 1.2rem 1rem; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #f0f0f0;">
-    
-    <!-- จัดส่งรวดเร็ว -->
-    <div style="display: flex; align-items: center; gap: 12px; text-align: left;">
-        <div style="width: 48px; height: 48px; background-color: #f5f5f7; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#222222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="1" y="3" width="15" height="13"></rect>
-                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                <circle cx="18.5" cy="18.5" r="2.5"></circle>
-            </svg>
-        </div>
-        <div>
-            <strong style="display: block; font-size: 0.95rem; color: #111;">จัดส่งรวดเร็ว</strong>
-            <small style="color: #666; font-size: 0.8rem;">ได้รับสินค้าภายใน 1-3 วัน</small>
-        </div>
-    </div>
+                    <div class="hero-actions">
+                        <a href="#products" class="btn-primary" onclick="selectCategory('all'); return false;">
+                            ช้อปเลย
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+                        </a>
+                        <button class="btn-ghost" onclick="selectCategory('all')">ดูสินค้าทั้งหมด</button>
+                    </div>
 
-    <!-- ชำระเงินปลอดภัย -->
-    <div style="display: flex; align-items: center; gap: 12px; text-align: left;">
-        <div style="width: 48px; height: 48px; background-color: #f5f5f7; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#222222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                <line x1="1" y1="10" x2="23" y2="10"></line>
-            </svg>
-        </div>
-        <div>
-            <strong style="display: block; font-size: 0.95rem; color: #111;">ชำระเงินปลอดภัย</strong>
-            <small style="color: #666; font-size: 0.8rem;">สแกน QR Code พร้อมเพย์</small>
-        </div>
-    </div>
+                    <p class="hero-note">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"></rect><path d="M16 8h4l3 3v5h-7V8Z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                        ส่งฟรีทั่วไทยเมื่อช้อปครบ 500 บาท
+                    </p>
+                </div>
 
-    <!-- เปลี่ยนไซส์ได้ -->
-    <div style="display: flex; align-items: center; gap: 12px; text-align: left;">
-        <div style="width: 48px; height: 48px; background-color: #f5f5f7; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#222222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="23 4 23 10 17 10"></polyline>
-                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-            </svg>
+                <div class="hero-visual" aria-hidden="true">
+                    <div class="hero-tile hero-tile-top"><img src="แก็บขาว.jpg" alt=""></div>
+                    <div class="hero-tile hero-tile-main"><img src="Bagy.jpg" alt=""></div>
+                    <div class="hero-tile hero-tile-bottom"><img src="polo.jpg" alt=""></div>
+                    <div class="hero-float"><span class="hero-float-dot"></span> สินค้าพร้อมส่ง</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== จุดเด่นบริการ ==================== -->
+        <div class="perks-wrap">
+            <div class="perks" aria-label="บริการของร้าน">
+                <div class="perk">
+                    <div class="perk-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <path d="M16 8h4l3 3v5h-7V8Z"></path>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                        </svg>
+                    </div>
+                    <div class="perk-text">
+                        <strong>จัดส่งรวดเร็ว</strong>
+                        <small>ได้รับสินค้าภายใน 1–3 วัน</small>
+                    </div>
+                </div>
+
+                <div class="perk">
+                    <div class="perk-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="1" y="4" width="22" height="16" rx="2"></rect>
+                            <path d="M1 10h22"></path>
+                        </svg>
+                    </div>
+                    <div class="perk-text">
+                        <strong>ชำระเงินปลอดภัย</strong>
+                        <small>สแกน QR Code พร้อมเพย์</small>
+                    </div>
+                </div>
+
+                <div class="perk">
+                    <div class="perk-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M23 4v6h-6"></path>
+                            <path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"></path>
+                        </svg>
+                    </div>
+                    <div class="perk-text">
+                        <strong>เปลี่ยนไซส์ได้</strong>
+                        <small>ภายใน 7 วันหลังได้รับสินค้า</small>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <strong style="display: block; font-size: 0.95rem; color: #111;">เปลี่ยนไซส์ได้</strong>
-            <small style="color: #666; font-size: 0.8rem;">ภายใน 7 วันหลังได้รับสินค้า</small>
-        </div>
-    </div>
 
-</div>
+        <!-- ==================== สินค้า ==================== -->
+        <section class="catalog" id="products">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <span class="section-eyebrow">Shop the collection</span>
+                        <h2>สินค้าทั้งหมด</h2>
+                        <p class="section-sub">เสื้อผ้า รองเท้า และแอคเซสซอรีที่คัดมาแล้ว ใส่ได้จริงในทุกวัน</p>
+                    </div>
 
-    <!-- Content Container -->
-    <div class="container">
-        <h2 style="color: #ffffff;">หมวดหมู่สินค้า</h2>
-        
-        <!-- หมวดหมู่ -->
-        <div class="category-menu">
-            <button class="category-btn active" onclick="filterCategory('all', this)">ทั้งหมด</button>
-            <button class="category-btn" onclick="filterCategory('shirt', this)">เสื้อ</button>
-            <button class="category-btn" onclick="filterCategory('pants', this)">กางเกง</button>
-            <button class="category-btn" onclick="filterCategory('hat', this)">หมวก</button>
-        </div>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+                        <input type="search" id="search-input" placeholder="ค้นหาสินค้า..." aria-label="ค้นหาสินค้า" oninput="searchProducts(this.value)">
+                    </div>
+                </div>
 
-        <!-- รายการสินค้า GRID -->
-        <div id="product-list" class="product-grid"></div>
-    </div>
+                <div class="catalog-bar">
+                    <div class="category-menu" role="group" aria-label="กรองตามหมวดหมู่">
+                        <button class="category-btn active" data-category="all" onclick="filterCategory('all', this)">ทั้งหมด</button>
+                        <button class="category-btn" data-category="shirt" onclick="filterCategory('shirt', this)">เสื้อ</button>
+                        <button class="category-btn" data-category="pants" onclick="filterCategory('pants', this)">กางเกง</button>
+                        <button class="category-btn" data-category="shoe" onclick="filterCategory('shoe', this)">รองเท้า</button>
+                        <button class="category-btn" data-category="hat" onclick="filterCategory('hat', this)">หมวก</button>
+                    </div>
+                    <span class="result-count" id="result-count" aria-live="polite">24 รายการ</span>
+                </div>
 
-    <!-- Modal ตะกร้าสินค้า -->
+                <div id="product-list" class="product-grid"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== Modal ตะกร้าสินค้า ==================== -->
     <div id="cart-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="toggleCart()">&times;</span>
-            <h2>🛒 ตะกร้าสินค้า</h2>
-            <div id="cart-items" style="margin: 1rem 0; max-height: 200px; overflow-y: auto;"></div>
-            <p style="font-weight: bold; margin-bottom: 1rem;">ราคารวม: <span id="total-price">0</span> บาท</p>
-            <button class="checkout-btn" onclick="checkout()">ชำระเงิน</button>
+        <div class="modal-content cart-modal-content">
+            <button class="close-btn" onclick="toggleCart()" aria-label="ปิด">&times;</button>
+            <div class="modal-heading">
+                <div>
+                    <span class="modal-eyebrow">Your bag</span>
+                    <h2 class="modal-title">ตะกร้าสินค้า</h2>
+                </div>
+                <span class="cart-items-badge" id="cart-items-badge">0 ชิ้น</span>
+            </div>
+
+            <div id="cart-items" class="cart-items"></div>
+
+            <div class="shipping-progress" id="shipping-progress">
+                <div class="shipping-progress-head">
+                    <span id="shipping-text">ช้อปอีก ฿500 เพื่อรับสิทธิ์ส่งฟรี</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"></rect><path d="M16 8h4l3 3v5h-7V8Z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                </div>
+                <div class="progress-track"><span id="shipping-bar" class="progress-fill"></span></div>
+            </div>
+
+            <div class="cart-total-row" id="cart-total-row">
+                <div>
+                    <span>ราคารวม</span>
+                    <small>รวมภาษีแล้ว</small>
+                </div>
+                <strong><span id="total-price">0</span> บาท</strong>
+            </div>
+
+            <button class="checkout-btn" id="checkout-btn" onclick="checkout()">
+                ดำเนินการชำระเงิน
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </button>
+            <button type="button" class="text-btn" id="clear-cart-btn" onclick="clearCart()">ล้างตะกร้า</button>
         </div>
     </div>
 
-    <!-- Modal ชำระเงิน -->
+    <!-- ==================== Modal ชำระเงิน ==================== -->
     <div id="payment-modal" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <span class="close-btn" onclick="closePayment()">&times;</span>
-            <h2 style="color: #ff477e; margin-bottom: 0.5rem;">สแกนจ่ายเงิน</h2>
-            <p style="font-size: 1rem;">ยอดชำระ: <span id="pay-amount" style="color: #ff477e; font-weight: bold; font-size: 1.2rem;">0</span> บาท</p>
-            
-            <!-- ปุ่มเลือกธนาคารพร้อมโลโก้ -->
-            <div class="bank-selector" style="display: flex; justify-content: center; gap: 12px; margin: 15px 0;">
-                <button id="btn-kbank" class="bank-btn active kbank-style" onclick="switchBankQR('kbank')">
-                    <img src="กสิกร.jpg" alt="KBank Logo" class="bank-logo">
-                    <span>กสิกรไทย</span>
-                </button>
-                <button id="btn-scb" class="bank-btn scb-style" onclick="switchBankQR('scb')">
-                    <img src="scb.jpg" alt="SCB Logo" class="bank-logo">
-                    <span>ไทยพาณิชย์</span>
-                </button>
+        <div class="modal-content payment-modal-content">
+            <button class="close-btn" onclick="closePayment()" aria-label="ปิด">&times;</button>
+
+            <div class="modal-heading">
+                <div>
+                    <span class="modal-eyebrow">Secure checkout</span>
+                    <h2 class="modal-title">ชำระเงิน</h2>
+                </div>
+                <div class="pay-summary">
+                    <span>ยอดที่ต้องชำระ</span>
+                    <strong><span id="pay-amount">0</span> บาท</strong>
+                </div>
+            </div>
+
+            <div class="checkout-steps" aria-hidden="true">
+                <span class="checkout-step is-active"><b>1</b> เลือกธนาคาร</span>
+                <span class="checkout-step"><b>2</b> สแกนจ่าย</span>
+                <span class="checkout-step"><b>3</b> แนบสลิป</span>
+            </div>
+
+            <div class="payment-section">
+                <div class="section-label">เลือกธนาคารที่โอน</div>
+                <div class="bank-selector">
+                    <button id="btn-kbank" class="bank-btn active kbank-style" onclick="switchBankQR('kbank')">
+                        <span class="bank-logo-shell"><img src="กสิกร.jpg" alt="โลโก้ธนาคารกสิกรไทย" class="bank-logo"></span>
+                        <span class="bank-info"><strong>กสิกรไทย</strong><small>KBank</small></span>
+                        <span class="bank-check">✓</span>
+                    </button>
+                    <button id="btn-scb" class="bank-btn scb-style" onclick="switchBankQR('scb')">
+                        <span class="bank-logo-shell"><img src="scb.jpg" alt="โลโก้ธนาคารไทยพาณิชย์" class="bank-logo"></span>
+                        <span class="bank-info"><strong>ไทยพาณิชย์</strong><small>SCB</small></span>
+                        <span class="bank-check">✓</span>
+                    </button>
+                </div>
             </div>
 
             <!-- กล่อง QR Code กสิกรไทย -->
-            <div id="qr-box-kbank" class="qr-container" style="margin: 1rem 0;">
-                <img id="qr-kbank-img" src="" alt="KBank PromptPay QR" style="width: 200px; height: 200px; border-radius: 12px; border: 1px solid #eee;">
-                <p style="font-size: 0.85rem; color: #138f2d; font-weight: bold; margin-top: 8px;">ธนาคารกสิกรไทย: 076-2-79099-8</p>
-                <p style="font-size: 0.85rem; color: #333; font-weight: bold; margin-top: 2px;">ชื่อบัญชี: บริษัท My Clothing Shop จำกัด</p>
+            <div id="qr-box-kbank" class="qr-container">
+                <div class="qr-head">
+                    <span>สแกนเพื่อชำระเงิน</span>
+                    <button type="button" class="qr-copy-btn" onclick="copyAccount()">คัดลอกเลขบัญชี</button>
+                </div>
+                <div class="qr-frame">
+                    <img id="qr-kbank-img" src="" alt="KBank PromptPay QR" class="qr-image">
+                </div>
+                <p class="qr-bank-name kbank-text">ธนาคารกสิกรไทย: 076-2-79099-8</p>
+                <p class="qr-account-name">ชื่อบัญชี: บริษัท My Clothing Shop จำกัด</p>
             </div>
 
             <!-- กล่อง QR Code ไทยพาณิชย์ -->
-            <div id="qr-box-scb" class="qr-container" style="margin: 1rem 0; display: none;">
-                <img id="qr-scb-img" src="" alt="SCB PromptPay QR" style="width: 200px; height: 200px; border-radius: 12px; border: 1px solid #eee;">
-                <p style="font-size: 0.85rem; color: #4e2e80; font-weight: bold; margin-top: 8px;">ธนาคารไทยพาณิชย์: 000-1-20602-0</p>
-                <p style="font-size: 0.85rem; color: #333; font-weight: bold; margin-top: 2px;">ชื่อบัญชี: บริษัท My Clothing Shop จำกัด</p>
+            <div id="qr-box-scb" class="qr-container" style="display: none;">
+                <div class="qr-head">
+                    <span>สแกนเพื่อชำระเงิน</span>
+                    <button type="button" class="qr-copy-btn" onclick="copyAccount()">คัดลอกเลขบัญชี</button>
+                </div>
+                <div class="qr-frame">
+                    <img id="qr-scb-img" src="" alt="SCB PromptPay QR" class="qr-image">
+                </div>
+                <p class="qr-bank-name scb-text">ธนาคารไทยพาณิชย์: 000-1-20602-0</p>
+                <p class="qr-account-name">ชื่อบัญชี: บริษัท My Clothing Shop จำกัด</p>
             </div>
 
-            <!-- โครงสร้างแนบสลิป -->
+            <!-- แนบสลิป -->
             <div class="slip-upload-section">
+                <div class="section-label">แนบหลักฐานการโอน</div>
                 <label for="slip-input" class="upload-label" id="upload-label-text">
-                     เลือกรูปสลิปโอนเงิน
+                    <span class="upload-icon">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"></path><path d="M5 20h14"></path></svg>
+                    </span>
+                    <span class="upload-copy">
+                        <strong id="slip-label-title">แตะเพื่อแนบสลิป</strong>
+                        <small>PNG, JPG หรือ WEBP ขนาดไม่เกิน 8 MB</small>
+                    </span>
                 </label>
-                <input type="file" id="slip-input" accept="image/*" onchange="previewSlip(event)">
-                
-                <div id="slip-preview-container" style="display: none;">
-                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 6px;">ตัวอย่างสลิปที่แนบ:</p>
-                    <img id="slip-preview" src="" alt="Slip Preview">
+                <input type="file" id="slip-input" accept="image/png,image/jpeg,image/webp" onchange="previewSlip(event)">
+
+                <div id="slip-preview-container" class="slip-preview-card" style="display: none;">
+                    <img id="slip-preview" src="" alt="ตัวอย่างสลิปโอนเงิน" class="slip-preview-image">
+                    <div class="slip-preview-info">
+                        <strong id="slip-file-name">สลิปโอนเงิน</strong>
+                        <span>แนบหลักฐานเรียบร้อย</span>
+                    </div>
+                    <button type="button" class="slip-remove" onclick="clearSlip(event)">ลบ</button>
                 </div>
             </div>
 
-            <button class="confirm-btn" onclick="confirmPayment()">ยืนยันการชำระเงิน</button>
+            <p class="payment-help">ตรวจสอบยอดเงินและบัญชีปลายทางให้ถูกต้องก่อนกดยืนยัน</p>
+            <button class="confirm-btn" id="confirm-payment-btn" onclick="confirmPayment()" disabled>ยืนยันการชำระเงิน</button>
         </div>
     </div>
 
-    <!-- Modal ใบเสร็จ -->
+    <!-- ==================== Modal ใบเสร็จ ==================== -->
     <div id="receipt-modal" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <div class="success-icon"></div>
-            <h2>สั่งซื้อสำเร็จ!</h2>
+        <div class="modal-content receipt-modal-content">
+            <button class="close-btn" onclick="closeReceipt()" aria-label="ปิด">&times;</button>
+            <div class="receipt-hero">
+                <div class="success-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"></path></svg>
+                </div>
+                <span class="modal-eyebrow">Order confirmed</span>
+                <h2 class="modal-title">สั่งซื้อสำเร็จ</h2>
+                <p class="receipt-sub">ขอบคุณที่ช้อปกับเรา เราได้รับคำสั่งซื้อของคุณแล้ว</p>
+                <div class="receipt-meta">
+                    <span id="receipt-order-id">ORD-000000</span>
+                    <span id="receipt-order-date">-</span>
+                </div>
+            </div>
+
             <div class="receipt-box">
                 <div id="receipt-items-list"></div>
-                <hr style="margin: 0.5rem 0; border: none; border-top: 1px dashed #ccc;">
+                <hr class="receipt-divider">
                 <div class="receipt-row total">
-                    <span>ยอดรวมทั้งหมด:</span>
+                    <span>ยอดรวมทั้งหมด</span>
                     <span id="receipt-total-price">0 บาท</span>
                 </div>
-                <div class="receipt-slip-container">
-                    <p style="font-size: 0.85rem; color: #666; margin-top: 8px;">หลักฐานการโอนเงิน:</p>
-                    <img id="receipt-slip-img" src="" alt="Receipt Slip">
+                <div class="receipt-slip-container" id="receipt-slip-container">
+                    <p class="slip-preview-label">หลักฐานการโอนเงิน</p>
+                    <img id="receipt-slip-img" src="" alt="สลิปโอนเงิน">
                 </div>
             </div>
-            <button class="confirm-btn" onclick="closeReceipt()" style="margin-top: 1rem;">ปิดหน้าต่าง</button>
+
+            <div class="receipt-actions">
+                <button class="confirm-btn" onclick="viewOrdersFromReceipt()">ดูประวัติการสั่งซื้อ</button>
+                <button class="btn-secondary" onclick="closeReceipt()">กลับไปช้อปต่อ</button>
+            </div>
         </div>
     </div>
 
-    <!-- 🟢 Modal ประวัติการสั่งซื้อ (เพิ่มใหม่) -->
+    <!-- ==================== Modal ประวัติการสั่งซื้อ ==================== -->
     <div id="order-history-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px; text-align: left;">
-            <span class="close-btn" onclick="closeOrderHistoryModal()">&times;</span>
-            <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #111;">📜 ประวัติการสั่งซื้อของฉัน</h2>
-            <div id="order-history-list" style="max-height: 380px; overflow-y: auto; padding-right: 5px;"></div>
+        <div class="modal-content order-modal-content">
+            <button class="close-btn" onclick="closeOrderHistoryModal()" aria-label="ปิด">&times;</button>
+            <div class="modal-heading">
+                <div>
+                    <span class="modal-eyebrow">Order history</span>
+                    <h2 class="modal-title">ประวัติการสั่งซื้อ</h2>
+                </div>
+            </div>
+            <div id="order-history-list" class="order-history-list"></div>
         </div>
     </div>
 
-    <!-- Modal ข้อมูลส่วนตัว -->
+    <!-- ==================== Modal ข้อมูลส่วนตัว ==================== -->
     <div id="profile-modal" class="modal">
         <div class="modal-content profile-card-modal">
-            <span class="close-btn" onclick="closeProfileModal()">&times;</span>
-            <h2 style="font-size: 1.2rem; text-align: center; margin-bottom: 1.2rem; color: #111;">แก้ไขข้อมูลส่วนตัว</h2>
-            
+            <button class="close-btn" onclick="closeProfileModal()" aria-label="ปิด">&times;</button>
+
+            <div class="profile-hero">
+                <div class="profile-avatar-wrap">
+                    <img id="profile-avatar-preview" class="profile-avatar-img" src="user.jpg" alt="รูปโปรไฟล์">
+                    <button type="button" class="profile-avatar-edit" onclick="document.getElementById('profile-avatar-input').click()" aria-label="เปลี่ยนรูปโปรไฟล์">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L8 6H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-4l-1.5-2Z"></path><circle cx="12" cy="12.5" r="3.5"></circle></svg>
+                    </button>
+                    <input type="file" id="profile-avatar-input" class="profile-avatar-input" accept="image/png,image/jpeg,image/webp" onchange="previewProfileAvatar(event)">
+                </div>
+                <div class="profile-hero-copy">
+                    <span class="modal-eyebrow">My account</span>
+                    <h2 class="profile-hero-title" id="profile-name-display">ข้อมูลส่วนตัว</h2>
+                    <span class="profile-username" id="profile-username-display">@username</span>
+                </div>
+            </div>
+
             <form id="profile-form" onsubmit="saveProfileData(event)">
                 <div class="profile-form-group">
-                    <label>ชื่อ - นามสกุล</label>
-                    <input type="text" id="profile-fullname" class="profile-input-box" placeholder="กรอกชื่อ-นามสกุล" required>
+                    <label for="profile-fullname">ชื่อ - นามสกุล</label>
+                    <input type="text" id="profile-fullname" class="profile-input-box" placeholder="กรอกชื่อ-นามสกุล" autocomplete="name" required>
                 </div>
+
                 <div class="profile-form-group">
-                    <label>หมายเลขโทรศัพท์</label>
-                    <div class="phone-input-container">
-                        <span class="country-code">TH +66 ▾</span>
-                        <input type="tel" id="profile-phone" placeholder="971912015" required>
+                    <label for="profile-email">อีเมล</label>
+                    <input type="email" id="profile-email" class="profile-input-box" placeholder="example@email.com" autocomplete="email" required>
+                </div>
+
+                <div class="form-two-col">
+                    <div class="profile-form-group">
+                        <label for="profile-phone">หมายเลขโทรศัพท์</label>
+                        <div class="phone-input-container">
+                            <span class="country-code">TH +66</span>
+                            <input type="tel" id="profile-phone" placeholder="812345678" autocomplete="tel" inputmode="tel" required>
+                        </div>
+                    </div>
+
+                    <div class="profile-form-group">
+                        <label for="profile-birthdate">วันเกิด</label>
+                        <input type="date" id="profile-birthdate" class="profile-input-box">
                     </div>
                 </div>
-                <div class="profile-form-group">
-                    <label>อีเมล</label>
-                    <input type="email" id="profile-email" class="profile-input-box" placeholder="example@email.com" required>
-                </div>
+
                 <div class="profile-form-group">
                     <label>เพศ</label>
                     <div class="gender-select-group">
@@ -227,51 +477,56 @@
                         <label class="gender-option"><input type="radio" name="gender" value="other"> อื่นๆ</label>
                     </div>
                 </div>
-                <div class="profile-form-group">
-                    <label>วันเกิด</label>
-                    <input type="date" id="profile-birthdate" class="profile-input-box">
-                </div>
+
+                <p class="profile-note">ข้อมูลและรูปโปรไฟล์จะถูกบันทึกไว้ในบัญชีของคุณบนเบราว์เซอร์นี้</p>
                 <button type="submit" class="btn-save-profile">บันทึกข้อมูลส่วนตัว</button>
             </form>
         </div>
     </div>
 
-    <!-- Modal แก้ไขที่อยู่ -->
+    <!-- ==================== Modal แก้ไขที่อยู่ ==================== -->
     <div id="address-modal" class="modal">
         <div class="modal-content address-card-modal">
-            <span class="close-btn" onclick="closeAddressModal()">&times;</span>
-            <h2 style="font-size: 1.2rem; text-align: center; margin-bottom: 1.2rem; color: #111;">แก้ไขที่อยู่</h2>
-            
+            <button class="close-btn" onclick="closeAddressModal()" aria-label="ปิด">&times;</button>
+            <div class="modal-heading">
+                <div>
+                    <span class="modal-eyebrow">Delivery address</span>
+                    <h2 class="modal-title">ที่อยู่จัดส่ง</h2>
+                </div>
+            </div>
+
             <form id="address-form" onsubmit="saveAddressData(event)">
                 <div class="address-form-group">
-                    <label>ชื่อ</label>
-                    <input type="text" id="addr-name" class="address-input-box" placeholder="กรอกชื่อ-นามสกุล" required>
+                    <label for="addr-name">ชื่อผู้รับ</label>
+                    <input type="text" id="addr-name" class="address-input-box" placeholder="กรอกชื่อ-นามสกุล" autocomplete="name" required>
                 </div>
                 <div class="address-form-group">
-                    <label>หมายเลขโทรศัพท์</label>
+                    <label for="addr-phone">หมายเลขโทรศัพท์</label>
                     <div class="phone-input-container">
-                        <span class="country-code">TH +66 ▾</span>
-                        <input type="tel" id="addr-phone" placeholder="971912015" required>
+                        <span class="country-code">TH +66</span>
+                        <input type="tel" id="addr-phone" placeholder="812345678" autocomplete="tel" inputmode="tel" required>
                     </div>
                 </div>
                 <div class="address-form-group">
-                    <label>ที่อยู่</label>
-                    <textarea id="addr-main" class="address-input-box" rows="2" placeholder="บ้านเลขที่, ถนน, แขวง/ตำบล, เขต/อำเภอ, จังหวัด, รหัสไปรษณีย์" required></textarea>
+                    <label for="addr-main">ที่อยู่</label>
+                    <textarea id="addr-main" class="address-input-box" rows="2" placeholder="บ้านเลขที่, ถนน, แขวง/ตำบล, เขต/อำเภอ, จังหวัด, รหัสไปรษณีย์" autocomplete="street-address" required></textarea>
                 </div>
+
                 <div class="map-confirm-box">
                     <div class="map-title"><span>📍</span> ยืนยันตำแหน่งในแผนที่ของฉัน</div>
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15513.30023839086!2d100.6523162621085!3d13.576941396910827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d58d8effe1a45%3A0x2ec3594a0bf99858!2z4Lir4Lih4Li54LmI4Lia4LmJ4Liy4LiZ4LiB4Lil4LmI4Lit4Lih4Lie4Li04Lij4Li44LiTIOC4leC4s-C4muC4pSDguYHguJ7guKPguIHguKnguLIg4Lit4Liz4LmA4Lig4Lit4LmA4Lih4Li34Lit4LiH4Liq4Lih4Li44LiX4Lij4Lib4Lij4Liy4LiB4Liy4LijIOC4quC4oeC4uOC4l-C4o-C4m-C4o-C4suC4geC4suC4oyAxMDI4MCDguJvguKPguLDguYDguJfguKjguYTguJfguKI!5e0!3m2!1sth!2sus!4v1787472808103!5m2!1sth!2sus" 
-                        width="100%" 
-                        height="160" 
-                        style="border:0; border-radius: 12px; margin-top: 8px;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15513.30023839086!2d100.6523162621085!3d13.576941396910827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d58d8effe1a45%3A0x2ec3594a0bf99858!2z4Lir4Lih4Li54LmI4Lia4LmJ4Liy4LiZ4LiB4Lil4LmI4Lit4Lih4Lie4Li04Lij4Li44LiTIOC4leC4s-C4muC4pSDguYHguJ7guKPguIHguKnguLIg4Lit4Liz4LmA4Lig4Lit4LmA4Lih4Li34Lit4LiH4Liq4Lih4Li44LiX4Lij4Lib4Lij4Liy4LiB4Liy4LijIOC4quC4oeC4uOC4l-C4o-C4m-C4o-C4suC4geC4suC4oyAxMDI4MCDguJvguKPguLDguYDguJfguKjguYTguJfguKI!5e0!3m2!1sth!2sus!4v1787472808103!5m2!1sth!2sus"
+                        width="100%"
+                        height="160"
+                        title="แผนที่ตำแหน่งที่อยู่จัดส่ง"
+                        allowfullscreen=""
+                        loading="lazy"
                         referrerpolicy="strict-origin-when-cross-origin">
                     </iframe>
                 </div>
+
                 <div class="address-form-group">
-                    <label>รายละเอียดที่อยู่</label>
+                    <label for="addr-detail">รายละเอียดที่อยู่</label>
                     <input type="text" id="addr-detail" class="address-input-box" placeholder="ป้อนรายละเอียดอื่น ๆ (ไม่บังคับ)">
                 </div>
                 <p class="privacy-notice">เมื่อคลิกบันทึก แสดงว่าคุณรับทราบว่าคุณได้อ่าน <a href="#">นโยบายความเป็นส่วนตัว</a> แล้ว</p>
@@ -280,28 +535,43 @@
         </div>
     </div>
 
-    <!-- Footer ส่วนท้ายเว็บ -->
-    <footer style="background-color: #1a1a1a; color: #ccc; padding: 2.5rem 1rem 1rem 1rem; margin-top: 3rem; font-size: 0.9rem;">
-        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
-            <div>
-                <h3 style="color: #fff; margin-bottom: 0.8rem; border: none;">My Clothing Shop</h3>
+    <!-- ==================== Footer ==================== -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="brand">
+                    <span class="brand-mark">M</span>
+                    <span class="brand-text">
+                        <span class="brand-name">My Clothing Shop</span>
+                        <span class="brand-sub">Essential Wear</span>
+                    </span>
+                </div>
                 <p>ร้านจำหน่ายเสื้อผ้าแฟชั่นคุณภาพสูง ตอบโจทย์ทุกสไตล์ที่เป็นคุณ</p>
             </div>
-            <div>
-                <h4 style="color: #fff; margin-bottom: 0.8rem;">ติดต่อเรา</h4>
+
+            <div class="footer-col">
+                <h4>ติดต่อเรา</h4>
                 <p>📍 กรุงเทพมหานคร, ประเทศไทย</p>
                 <p>📞 02-123-4567</p>
                 <p>💬 Line: @myclothingshop</p>
             </div>
-            <div>
-                <h4 style="color: #fff; margin-bottom: 0.8rem;">ติดตามเรา</h4>
-                <p>Facebook | Instagram | TikTok</p>
+
+            <div class="footer-col">
+                <h4>ติดตามเรา</h4>
+                <p>Facebook · Instagram · TikTok</p>
+                <p class="footer-payment">ชำระผ่าน KBank · SCB · PromptPay</p>
             </div>
         </div>
-        <hr style="border: 0; border-top: 1px solid #333; margin: 1.5rem 0 1rem 0;">
-        <p style="text-align: center; font-size: 0.8rem; color: #777;">© 2026 My Clothing Shop Co., Ltd. All rights reserved.</p>
+        <div class="footer-bottom">
+            <p>© 2026 My Clothing Shop Co., Ltd. All rights reserved.</p>
+            <p>ออกแบบมาเพื่อทุกสไตล์ที่เป็นคุณ</p>
+        </div>
     </footer>
 
+    <!-- Toast แจ้งเตือนเพิ่มสินค้า -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="store.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

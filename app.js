@@ -1,30 +1,65 @@
 /* ==================== ข้อมูลสินค้า ==================== */
+const PRODUCT_IMAGE_DIR = "assets/images/products";
+
 const products = [
-    { id: 1, name: "เสื้อยืดสีขาว", price: 150, category: "shirt", image: "เสื้อยืสีขาว.jpg" },
-    { id: 2, name: "เสื้อยืดสีดำ", price: 150, category: "shirt", image: "ยืดดำ.jpg" },
-    { id: 3, name: "เสื้อ Polo", price: 500, category: "shirt", image: "polo.jpg" },
-    { id: 4, name: "เสื้อฮู้ดดี้", price: 700, category: "shirt", image: "ฮุ้ดดี้.jpg" },
-    { id: 5, name: "เสื้อเชิ้ตแขนยาว", price: 300, category: "shirt", image: "เชิ้ตแขนยาว 2.jpg" },
-    { id: 6, name: "เสื้อกล้ามผู้หญิง", price: 200, category: "shirt", image: "กล้ามหญิง.jpg" },
-    { id: 7, name: "เสื้อกล้ามผู้ชาย", price: 150, category: "shirt", image: "กล้ามชาย 1.jpg" },
-    { id: 8, name: "กางเกงยีนส์ขาสั้น", price: 300, category: "pants", image: "ขาสั้น.jpg" },
-    { id: 9, name: "กางเกงยีนส์ Baggy", price: 350, category: "pants", image: "Bagy.jpg" },
-    { id: 10, name: "กางเกงสแล็คชาย", price: 350, category: "pants", image: "สแล็คชาย.jpg" },
-    { id: 11, name: "หมวกแก๊ปขาว", price: 250, category: "hat", image: "แก็บขาว.jpg" },
-    { id: 12, name: "หมวกแก๊ปเขียว", price: 250, category: "hat", image: "เเก็ปเขียว.jpg" },
-    { id: 13, name: "หมวกแก๊ปน้ำเงิน", price: 250, category: "hat", image: "แก็บน้ำเงิน.jpg" },
-    { id: 14, name: "หมวกแก๊ปครีม", price: 250, category: "hat", image: "เเก็บครีม.jpg" },
-    { id: 15, name: "เสื้อยืดคอกลมสีขาว", price: 190, category: "shirt", image: "ยืดขาว 1.jpg" },
-    { id: 16, name: "เสื้อเชิ้ตแขนยาวสีขาว", price: 420, category: "shirt", image: "เสื้อเชิ๊ตแขนยาว.jpg" },
-    { id: 17, name: "เสื้อกล้ามสีขาว", price: 180, category: "shirt", image: "กล้ามชาย.jpg" },
-    { id: 18, name: "กางเกงออกกำลังกาย", price: 290, category: "pants", image: "กางเกงออกกำลังกาย.jpg" },
-    { id: 19, name: "กางเกงบอลลูน", price: 450, category: "pants", image: "บอลลูน.jpg" },
-    { id: 20, name: "รองเท้าผ้าใบแฟชั่นสีขาว", price: 1290, category: "shoe", image: "shoe-fashion-white.jpg" },
-    { id: 21, name: "รองเท้าผ้าใบแฟชั่นสีชมพู", price: 1190, category: "shoe", image: "shoe-fashion-pink.jpg" },
-    { id: 22, name: "รองเท้าผ้าใบแฟชั่นสีดำ-ขาว", price: 1490, category: "shoe", image: "shoe-fashion-black-white.jpg" },
-    { id: 23, name: "รองเท้าวิ่งสีเทา", price: 1590, category: "shoe", image: "shoe-running-gray.jpg" },
-    { id: 24, name: "รองเท้าวิ่งสีขาว", price: 1690, category: "shoe", image: "shoe-running-white.jpg" }
+    { id: 1, name: "เสื้อยืดสีขาว", price: 150, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p01.webp` },
+    { id: 2, name: "เสื้อยืดสีดำ", price: 150, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p02.webp` },
+    { id: 3, name: "เสื้อ Polo", price: 500, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p03.webp` },
+    { id: 4, name: "เสื้อฮู้ดดี้", price: 700, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p04.webp` },
+    { id: 5, name: "เสื้อเชิ้ตแขนยาว", price: 300, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p05.webp` },
+    { id: 6, name: "เสื้อกล้ามผู้หญิง", price: 200, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p06.webp` },
+    { id: 7, name: "เสื้อกล้ามผู้ชาย", price: 150, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p07.webp` },
+    { id: 8, name: "กางเกงยีนส์ขาสั้น", price: 300, category: "pants", image: `${PRODUCT_IMAGE_DIR}/p08.webp` },
+    { id: 9, name: "กางเกงยีนส์ Baggy", price: 350, category: "pants", image: `${PRODUCT_IMAGE_DIR}/p09.webp` },
+    { id: 10, name: "กางเกงสแล็คชาย", price: 350, category: "pants", image: `${PRODUCT_IMAGE_DIR}/p10.webp` },
+    { id: 11, name: "หมวกแก๊ปขาว", price: 250, category: "hat", image: `${PRODUCT_IMAGE_DIR}/p11.webp` },
+    { id: 12, name: "หมวกแก๊ปเขียว", price: 250, category: "hat", image: `${PRODUCT_IMAGE_DIR}/p12.webp` },
+    { id: 13, name: "หมวกแก๊ปน้ำเงิน", price: 250, category: "hat", image: `${PRODUCT_IMAGE_DIR}/p13.webp` },
+    { id: 14, name: "หมวกแก๊ปครีม", price: 250, category: "hat", image: `${PRODUCT_IMAGE_DIR}/p14.webp` },
+    { id: 15, name: "เสื้อยืดคอกลมสีขาว", price: 190, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p15.webp` },
+    { id: 16, name: "เสื้อเชิ้ตแขนยาวสีขาว", price: 420, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p16.webp` },
+    { id: 17, name: "เสื้อกล้ามสีขาว", price: 180, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p17.webp` },
+    { id: 18, name: "กางเกงออกกำลังกาย", price: 290, category: "pants", image: `${PRODUCT_IMAGE_DIR}/p18.webp` },
+    { id: 19, name: "กางเกงบอลลูน", price: 450, category: "pants", image: `${PRODUCT_IMAGE_DIR}/p19.webp` },
+    { id: 20, name: "รองเท้าผ้าใบแฟชั่นสีขาว", price: 1290, category: "shoe", image: `${PRODUCT_IMAGE_DIR}/p20.webp` },
+    { id: 21, name: "รองเท้าผ้าใบแฟชั่นสีชมพู", price: 1190, category: "shoe", image: `${PRODUCT_IMAGE_DIR}/p21.webp` },
+    { id: 22, name: "รองเท้าผ้าใบแฟชั่นสีดำ-ขาว", price: 1490, category: "shoe", image: `${PRODUCT_IMAGE_DIR}/p22.webp` },
+    { id: 23, name: "รองเท้าวิ่งสีเทา", price: 1590, category: "shoe", image: `${PRODUCT_IMAGE_DIR}/p23.webp` },
+    { id: 24, name: "รองเท้าวิ่งสีขาว", price: 1690, category: "shoe", image: `${PRODUCT_IMAGE_DIR}/p24.webp` }
 ];
+
+const PRODUCT_IMAGE_ALIASES = {
+    "เสื้อยืสีขาว.jpg": `${PRODUCT_IMAGE_DIR}/p01.webp`,
+    "ยืดดำ.jpg": `${PRODUCT_IMAGE_DIR}/p02.webp`,
+    "polo.jpg": `${PRODUCT_IMAGE_DIR}/p03.webp`,
+    "ฮุ้ดดี้.jpg": `${PRODUCT_IMAGE_DIR}/p04.webp`,
+    "เชิ้ตแขนยาว 2.jpg": `${PRODUCT_IMAGE_DIR}/p05.webp`,
+    "กล้ามหญิง.jpg": `${PRODUCT_IMAGE_DIR}/p06.webp`,
+    "กล้ามชาย 1.jpg": `${PRODUCT_IMAGE_DIR}/p07.webp`,
+    "ขาสั้น.jpg": `${PRODUCT_IMAGE_DIR}/p08.webp`,
+    "Bagy.jpg": `${PRODUCT_IMAGE_DIR}/p09.webp`,
+    "สแล็คชาย.jpg": `${PRODUCT_IMAGE_DIR}/p10.webp`,
+    "แก็บขาว.jpg": `${PRODUCT_IMAGE_DIR}/p11.webp`,
+    "เเก็ปเขียว.jpg": `${PRODUCT_IMAGE_DIR}/p12.webp`,
+    "แก็บน้ำเงิน.jpg": `${PRODUCT_IMAGE_DIR}/p13.webp`,
+    "เเก็บครีม.jpg": `${PRODUCT_IMAGE_DIR}/p14.webp`,
+    "ยืดขาว 1.jpg": `${PRODUCT_IMAGE_DIR}/p15.webp`,
+    "เสื้อเชิ๊ตแขนยาว.jpg": `${PRODUCT_IMAGE_DIR}/p16.webp`,
+    "กล้ามชาย.jpg": `${PRODUCT_IMAGE_DIR}/p17.webp`,
+    "กางเกงออกกำลังกาย.jpg": `${PRODUCT_IMAGE_DIR}/p18.webp`,
+    "บอลลูน.jpg": `${PRODUCT_IMAGE_DIR}/p19.webp`,
+    "shoe-fashion-white.jpg": `${PRODUCT_IMAGE_DIR}/p20.webp`,
+    "shoe-fashion-pink.jpg": `${PRODUCT_IMAGE_DIR}/p21.webp`,
+    "shoe-fashion-black-white.jpg": `${PRODUCT_IMAGE_DIR}/p22.webp`,
+    "shoe-running-gray.jpg": `${PRODUCT_IMAGE_DIR}/p23.webp`,
+    "shoe-running-white.jpg": `${PRODUCT_IMAGE_DIR}/p24.webp`
+};
+
+function resolveProductImage(image) {
+    if (!image) return `${PRODUCT_IMAGE_DIR}/p01.webp`;
+    if (image.startsWith("assets/")) return image;
+    return PRODUCT_IMAGE_ALIASES[image] || image;
+}
 
 const CATEGORY_LABELS = {
     shirt: "เสื้อ",
@@ -689,7 +724,7 @@ function updateCartUI() {
 
         return `
             <div class="cart-item-row">
-                <img src="${item.image}" alt="${escapeHTML(item.name)}" class="cart-thumb">
+                <img src="${resolveProductImage(item.image)}" alt="${escapeHTML(item.name)}" class="cart-thumb">
                 <div class="cart-item-info">
                     <div class="cart-item-top">
                         <span class="cart-item-name">${escapeHTML(item.name)}</span>
@@ -927,7 +962,7 @@ function confirmPayment() {
                 price: item.price,
                 qty: item.qty || 1,
                 size: item.size || "",
-                image: item.image
+                image: resolveProductImage(item.image)
             })),
             totalPrice: total,
             bank: selectedBank,
@@ -1040,14 +1075,14 @@ function initUserDisplay() {
         || "ผู้ใช้งาน";
     const secondaryText = (user && user.email)
         || (username ? `@${username}` : "ยินดีต้อนรับกลับมา");
-    const avatar = (user && user.avatar) || "user.jpg";
+    const avatar = (user && user.avatar) || "assets/images/avatars/user.jpg";
 
     const display = document.getElementById("user-display");
     const subDisplay = document.getElementById("profile-sub");
     const avatarImg = document.getElementById("avatar-img");
     const logoutButton = document.getElementById("header-logout-btn");
 
-    if (display) display.innerText = `👤 ${displayName}`;
+    if (display) display.innerText = displayName;
     if (subDisplay) subDisplay.innerText = secondaryText;
     if (avatarImg) avatarImg.src = avatar;
     if (logoutButton) logoutButton.hidden = !(user || username);
@@ -1108,7 +1143,7 @@ function openProfileModal() {
     const email = (user && user.email) || "";
     const phone = (user && user.phone) || "";
     const birthdate = (user && user.birthdate) || "";
-    const avatar = (user && user.avatar) || "user.jpg";
+    const avatar = (user && user.avatar) || "assets/images/avatars/user.jpg";
     const savedGender = (user && user.gender) || "male";
 
     const fullnameInput = document.getElementById("profile-fullname");
@@ -1199,7 +1234,7 @@ function saveProfileData(event) {
     }
 
     const updatedUser = updateCurrentShopUser(updates);
-    const avatar = (updatedUser && updatedUser.avatar) || "user.jpg";
+    const avatar = (updatedUser && updatedUser.avatar) || "assets/images/avatars/user.jpg";
 
     const userDisplay = document.getElementById("user-display");
     const profileSub = document.getElementById("profile-sub");
@@ -1207,7 +1242,7 @@ function saveProfileData(event) {
     const nameDisplay = document.getElementById("profile-name-display");
     const avatarPreview = document.getElementById("profile-avatar-preview");
 
-    if (userDisplay) userDisplay.innerText = `👤 ${fullname}`;
+    if (userDisplay) userDisplay.innerText = fullname;
     if (profileSub) profileSub.innerText = email;
     if (headerAvatar) headerAvatar.src = avatar;
     if (nameDisplay) nameDisplay.textContent = fullname;
@@ -1325,7 +1360,7 @@ function openOrderHistoryModal() {
                         return `
                             <div class="order-item">
                                 <div class="order-item-left">
-                                    <img src="${item.image}" alt="${escapeHTML(item.name)}">
+                                    <img src="${resolveProductImage(item.image)}" alt="${escapeHTML(item.name)}">
                                     <span>${escapeHTML(item.name)}${size}${qty > 1 ? ` <small>× ${qty}</small>` : ""}</span>
                                 </div>
                                 <span>${formatPrice(item.price * qty)} บาท</span>

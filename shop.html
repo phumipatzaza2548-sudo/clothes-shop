@@ -30,6 +30,20 @@
 </head>
 <body>
 
+    <!-- ==================== แถบโปรโมชันส่งฟรี ==================== -->
+    <div class="shipping-promo" role="note" aria-label="โปรโมชันส่งฟรี">
+        <div class="shipping-promo-inner">
+            <span class="shipping-promo-badge">
+                <span class="ui-icon ui-icon-truck" aria-hidden="true"></span>
+            </span>
+            <p><strong>ส่งฟรีทั่วไทย</strong><span>เมื่อช้อปครบ ฿500</span></p>
+            <a href="#products" onclick="selectCategory('all'); return false;">
+                ช้อปเลย
+                <span class="ui-icon ui-icon-chevron-right" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
+
     <!-- ==================== Header ==================== -->
     <header class="site-header">
         <div class="header-inner">
@@ -59,21 +73,12 @@
                     aria-pressed="false"
                     title="สลับเป็นธีมสว่าง"
                 >
-                    <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
-                        <circle cx="12" cy="12" r="4"></circle>
-                        <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path>
-                    </svg>
-                    <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
-                    </svg>
+                    <span class="theme-icon theme-icon-sun ui-icon ui-icon-sun" aria-hidden="true"></span>
+                    <span class="theme-icon theme-icon-moon ui-icon ui-icon-moon" aria-hidden="true"></span>
                 </button>
 
                 <button class="cart-btn" onclick="toggleCart()" aria-label="เปิดตะกร้าสินค้า">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <circle cx="9" cy="20" r="1.5"></circle>
-                        <circle cx="18" cy="20" r="1.5"></circle>
-                        <path d="M2 3h2.5l2.3 11.2a1.5 1.5 0 0 0 1.5 1.2h9.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path>
-                    </svg>
+                    <span class="ui-icon ui-icon-cart" aria-hidden="true"></span>
                     <span class="cart-label">ตะกร้า</span>
                     <span class="cart-count" id="cart-count" aria-live="polite">0</span>
                 </button>
@@ -81,11 +86,11 @@
                 <!-- เมนูโปรไฟล์ Dropdown -->
                 <div class="user-profile-menu">
                     <button class="avatar-btn" onclick="toggleProfileMenu()" aria-label="เปิดเมนูโปรไฟล์">
-                        <img src="user.jpg" alt="รูปโปรไฟล์ผู้ใช้" id="avatar-img">
+                        <img src="assets/images/avatars/user.jpg" alt="รูปโปรไฟล์ผู้ใช้" id="avatar-img">
                     </button>
                     <div id="profile-dropdown" class="profile-dropdown">
                         <div class="profile-header">
-                            <p id="user-display">👤 ผู้ใช้งาน</p>
+                            <p id="user-display">ผู้ใช้งาน</p>
                             <span class="profile-sub" id="profile-sub">ยินดีต้อนรับกลับมา</span>
                         </div>
                         <ul class="dropdown-list">
@@ -122,10 +127,7 @@
                     title="ออกจากระบบ"
                     hidden
                 >
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <path d="m16 17 5-5-5-5M21 12H9"></path>
-                    </svg>
+                    <span class="ui-icon ui-icon-logout" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
@@ -149,15 +151,17 @@
                     </div>
 
                     <p class="hero-note">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="3" width="15" height="13"></rect><path d="M16 8h4l3 3v5h-7V8Z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                        ส่งฟรีทั่วไทยเมื่อช้อปครบ 500 บาท
+                        <span class="hero-note-icon">
+                            <span class="ui-icon ui-icon-truck" aria-hidden="true"></span>
+                        </span>
+                        <span><strong>ส่งฟรีทั่วไทย</strong> เมื่อช้อปครบ ฿500</span>
                     </p>
                 </div>
 
                 <div class="hero-visual" aria-hidden="true">
-                    <div class="hero-tile hero-tile-top"><img src="แก็บขาว.jpg" alt=""></div>
-                    <div class="hero-tile hero-tile-main"><img src="Bagy.jpg" alt=""></div>
-                    <div class="hero-tile hero-tile-bottom"><img src="polo.jpg" alt=""></div>
+                    <div class="hero-tile hero-tile-top"><img src="assets/images/products/p11.webp" alt=""></div>
+                    <div class="hero-tile hero-tile-main"><img src="assets/images/products/p09.webp" alt=""></div>
+                    <div class="hero-tile hero-tile-bottom"><img src="assets/images/products/p03.webp" alt=""></div>
                     <div class="hero-float"><span class="hero-float-dot"></span> สินค้าพร้อมส่ง</div>
                 </div>
             </div>
@@ -168,12 +172,7 @@
             <div class="perks" aria-label="บริการของร้าน">
                 <div class="perk">
                     <div class="perk-icon">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <rect x="1" y="3" width="15" height="13"></rect>
-                            <path d="M16 8h4l3 3v5h-7V8Z"></path>
-                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                        </svg>
+                        <span class="ui-icon ui-icon-truck" aria-hidden="true"></span>
                     </div>
                     <div class="perk-text">
                         <strong>จัดส่งรวดเร็ว</strong>
@@ -183,10 +182,7 @@
 
                 <div class="perk">
                     <div class="perk-icon">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <rect x="1" y="4" width="22" height="16" rx="2"></rect>
-                            <path d="M1 10h22"></path>
-                        </svg>
+                        <span class="ui-icon ui-icon-shield-check" aria-hidden="true"></span>
                     </div>
                     <div class="perk-text">
                         <strong>ชำระเงินปลอดภัย</strong>
@@ -196,10 +192,7 @@
 
                 <div class="perk">
                     <div class="perk-icon">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M23 4v6h-6"></path>
-                            <path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"></path>
-                        </svg>
+                        <span class="ui-icon ui-icon-size-exchange" aria-hidden="true"></span>
                     </div>
                     <div class="perk-text">
                         <strong>เปลี่ยนไซส์ได้</strong>
@@ -305,12 +298,12 @@
                 <div class="section-label">เลือกธนาคารที่โอน</div>
                 <div class="bank-selector">
                     <button id="btn-kbank" class="bank-btn active kbank-style" onclick="switchBankQR('kbank')">
-                        <span class="bank-logo-shell"><img src="กสิกร.jpg" alt="โลโก้ธนาคารกสิกรไทย" class="bank-logo"></span>
+                        <span class="bank-logo-shell"><img src="assets/images/brand/kbank.jpg" alt="โลโก้ธนาคารกสิกรไทย" class="bank-logo"></span>
                         <span class="bank-info"><strong>กสิกรไทย</strong><small>KBank</small></span>
                         <span class="bank-check">✓</span>
                     </button>
                     <button id="btn-scb" class="bank-btn scb-style" onclick="switchBankQR('scb')">
-                        <span class="bank-logo-shell"><img src="scb.jpg" alt="โลโก้ธนาคารไทยพาณิชย์" class="bank-logo"></span>
+                        <span class="bank-logo-shell"><img src="assets/images/brand/scb.jpg" alt="โลโก้ธนาคารไทยพาณิชย์" class="bank-logo"></span>
                         <span class="bank-info"><strong>ไทยพาณิชย์</strong><small>SCB</small></span>
                         <span class="bank-check">✓</span>
                     </button>
@@ -430,7 +423,7 @@
 
             <div class="profile-hero">
                 <div class="profile-avatar-wrap">
-                    <img id="profile-avatar-preview" class="profile-avatar-img" src="user.jpg" alt="รูปโปรไฟล์">
+                    <img id="profile-avatar-preview" class="profile-avatar-img" src="assets/images/avatars/user.jpg" alt="รูปโปรไฟล์">
                     <button type="button" class="profile-avatar-edit" onclick="document.getElementById('profile-avatar-input').click()" aria-label="เปลี่ยนรูปโปรไฟล์">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L8 6H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-4l-1.5-2Z"></path><circle cx="12" cy="12.5" r="3.5"></circle></svg>
                     </button>
@@ -513,7 +506,7 @@
                 </div>
 
                 <div class="map-confirm-box">
-                    <div class="map-title"><span>📍</span> ยืนยันตำแหน่งในแผนที่ของฉัน</div>
+                    <div class="map-title"><span class="ui-icon ui-icon-map-pin" aria-hidden="true"></span> ยืนยันตำแหน่งในแผนที่ของฉัน</div>
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15513.30023839086!2d100.6523162621085!3d13.576941396910827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311d58d8effe1a45%3A0x2ec3594a0bf99858!2z4Lir4Lih4Li54LmI4Lia4LmJ4Liy4LiZ4LiB4Lil4LmI4Lit4Lih4Lie4Li04Lij4Li44LiTIOC4leC4s-C4muC4pSDguYHguJ7guKPguIHguKnguLIg4Lit4Liz4LmA4Lig4Lit4LmA4Lih4Li34Lit4LiH4Liq4Lih4Li44LiX4Lij4Lib4Lij4Liy4LiB4Liy4LijIOC4quC4oeC4uOC4l-C4o-C4m-C4o-C4suC4geC4suC4oyAxMDI4MCDguJvguKPguLDguYDguJfguKjguYTguJfguKI!5e0!3m2!1sth!2sus!4v1787472808103!5m2!1sth!2sus"
                         width="100%"
@@ -551,14 +544,39 @@
 
             <div class="footer-col">
                 <h4>ติดต่อเรา</h4>
-                <p>📍 กรุงเทพมหานคร, ประเทศไทย</p>
-                <p>📞 02-123-4567</p>
-                <p>💬 Line: @myclothingshop</p>
+                <div class="footer-contact-list">
+                    <p>
+                        <span class="ui-icon ui-icon-map-pin" aria-hidden="true"></span>
+                        <span>กรุงเทพมหานคร, ประเทศไทย</span>
+                    </p>
+                    <p>
+                        <a href="tel:021234567">
+                            <span class="ui-icon ui-icon-phone" aria-hidden="true"></span>
+                            <span>02-123-4567</span>
+                        </a>
+                    </p>
+                    <p>
+                        <a href="https://line.me/R/ti/p/@myclothingshop" target="_blank" rel="noopener">
+                            <span class="ui-icon ui-icon-line" aria-hidden="true"></span>
+                            <span>Line: @myclothingshop</span>
+                        </a>
+                    </p>
+                </div>
             </div>
 
             <div class="footer-col">
                 <h4>ติดตามเรา</h4>
-                <p>Facebook · Instagram · TikTok</p>
+                <div class="footer-socials" aria-label="โซเชียลมีเดียของร้าน">
+                    <a href="https://www.facebook.com/myclothingshop" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
+                        <span class="ui-icon ui-icon-facebook" aria-hidden="true"></span>
+                    </a>
+                    <a href="https://www.instagram.com/myclothingshop" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
+                        <span class="ui-icon ui-icon-instagram" aria-hidden="true"></span>
+                    </a>
+                    <a href="https://www.tiktok.com/@myclothingshop" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok">
+                        <span class="ui-icon ui-icon-tiktok" aria-hidden="true"></span>
+                    </a>
+                </div>
                 <p class="footer-payment">ชำระผ่าน KBank · SCB · PromptPay</p>
             </div>
         </div>

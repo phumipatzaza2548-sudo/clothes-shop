@@ -184,7 +184,7 @@ async function loadInventory() {
 async function loadPendingOrders() {
     const { data: orders, error: orderError } = await supabaseClient
         .from("store_orders")
-        .select("id, status, bank, total_amount, created_at, slip_path, slip_expires_at")
+        .select("id, customer_name, status, bank, total_amount, created_at, slip_path, slip_expires_at")
         .eq("status", "pending")
         .order("created_at", { ascending: true });
 
@@ -203,7 +203,8 @@ async function loadPendingOrders() {
             || !Number.isSafeInteger(order.total_amount) || order.total_amount < 1
             || !Number.isFinite(Date.parse(order.created_at))
             || !Number.isFinite(Date.parse(order.slip_expires_at))
-            || (order.slip_path !== null && typeof order.slip_path !== "string")) {
+            || (order.slip_path !== null && typeof order.slip_path !== "string")
+            || (order.customer_name !== null && typeof order.customer_name !== "string")) {
             throw new Error("ข้อมูลคำสั่งซื้อในฐานข้อมูลไม่ถูกต้อง");
         }
     }
@@ -281,6 +282,7 @@ async function loadPendingOrders() {
                 <div class="admin-order-card-heading">
                     <div>
                         <strong>คำสั่งซื้อ ${escapeAdminHTML(order.id.slice(0, 8).toUpperCase())}</strong>
+                        <span class="admin-order-customer">${escapeAdminHTML(order.customer_name || "ไม่ระบุชื่อ")}</span>
                         <time datetime="${escapeAdminHTML(order.created_at)}">${escapeAdminHTML(dateLabel)}</time>
                     </div>
                     <span>${order.bank === "kbank" ? "กสิกรไทย" : "ไทยพาณิชย์"}</span>

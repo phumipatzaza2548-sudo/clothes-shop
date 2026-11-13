@@ -1,6 +1,7 @@
 create table if not exists public.store_orders (
     id uuid primary key,
     user_id uuid not null references auth.users (id) on delete restrict,
+    customer_name text,
     status text not null default 'pending'
         check (status in ('pending', 'approved', 'rejected')),
     bank text not null check (bank in ('kbank', 'scb')),
@@ -11,6 +12,22 @@ create table if not exists public.store_orders (
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()
 );
+
+alter table public.store_orders
+    add column if not exists customer_name text;
+
+update public.store_orders as orders
+set customer_name = coalesce(
+    nullif(btrim(users.raw_user_meta_data ->> 'fullname'), ''),
+    nullif(btrim(users.raw_user_meta_data ->> 'username'), '')
+)
+from auth.users as users
+where orders.user_id = users.id
+  and orders.customer_name is null
+  and coalesce(
+      nullif(btrim(users.raw_user_meta_data ->> 'fullname'), ''),
+      nullif(btrim(users.raw_user_meta_data ->> 'username'), '')
+  ) is not null;
 
 create index if not exists store_orders_user_created_idx
     on public.store_orders (user_id, created_at desc);
@@ -149,6 +166,7 @@ declare
     item_quantity integer;
     unit_price integer;
     order_total bigint := 0;
+    v_customer_name text;
     canonical_items jsonb := '[]'::jsonb;
     request_fingerprint text;
     existing_order public.store_orders%rowtype;
@@ -156,6 +174,16 @@ begin
     if (select auth.uid()) is null then
         raise exception 'Authentication required';
     end if;
+
+    select coalesce(
+        nullif(btrim(users.raw_user_meta_data ->> 'fullname'), ''),
+        nullif(btrim(users.raw_user_meta_data ->> 'username'), ''),
+        nullif(split_part(users.email, '@', 1), ''),
+        'ลูกค้า'
+    )
+    into v_customer_name
+    from auth.users as users
+    where users.id = (select auth.uid());
 
     if p_order_id is null
         or p_items is null
@@ -301,6 +329,7 @@ begin
     insert into public.store_orders (
         id,
         user_id,
+        customer_name,
         status,
         bank,
         total_amount,
@@ -311,6 +340,7 @@ begin
     values (
         p_order_id,
         (select auth.uid()),
+        v_customer_name,
         'pending',
         p_bank,
         order_total::integer,

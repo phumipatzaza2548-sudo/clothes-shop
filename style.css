@@ -5449,6 +5449,7 @@ html[data-theme="dark"] .gender-option:has(input:checked) {
 }
 
 .admin-order-card-heading time,
+.admin-order-customer,
 .admin-order-card-heading > span {
     color: var(--muted-2);
     font-size: 0.78rem;

@@ -1092,7 +1092,7 @@ function closeProfileModal() {
     closeModal("profile-modal");
 }
 
-function saveProfileData(event) {
+async function saveProfileData(event) {
     event.preventDefault();
 
     const fullnameInput = document.getElementById("profile-fullname");
@@ -1138,6 +1138,17 @@ function saveProfileData(event) {
     if (emailTaken) {
         showToast("อีเมลนี้ถูกใช้งานโดยบัญชีอื่น กรุณาใช้อีเมลอื่น");
         emailInput?.focus();
+        return;
+    }
+
+    try {
+        const { error } = await getSharedSupabaseClient().auth.updateUser({
+            data: { fullname, phone }
+        });
+        if (error) throw error;
+    } catch (error) {
+        console.error("Could not update Supabase profile metadata:", error);
+        showToast("บันทึกชื่อในระบบไม่สำเร็จ กรุณาลองใหม่");
         return;
     }
 

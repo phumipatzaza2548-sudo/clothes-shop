@@ -3389,8 +3389,8 @@ body.modal-open {
 }
 
 .qr-image {
-    width: 172px;
-    height: 172px;
+    width: min(100%, 260px);
+    height: auto;
     margin: 0 auto;
     object-fit: contain;
     background: #ffffff;
@@ -4756,8 +4756,7 @@ body.modal-open {
     }
 
     .qr-image {
-        width: 158px;
-        height: 158px;
+        width: min(100%, 220px);
     }
 
     .cart-item-row {

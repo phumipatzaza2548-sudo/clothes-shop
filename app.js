@@ -1,5 +1,3 @@
-const KBANK_ACCOUNT = "1788966500";
-const SCB_ACCOUNT = "4361120602";
 const KBANK_ACCOUNT_DISPLAY = "178-8-96650-0";
 const SCB_ACCOUNT_DISPLAY = "436-1-12060-2";
 const SHIPPING_THRESHOLD = 500;
@@ -620,12 +618,6 @@ async function checkout() {
     }
 
     const total = getCartTotal();
-
-    const kbankQrImg = document.getElementById("qr-kbank-img");
-    const scbQrImg = document.getElementById("qr-scb-img");
-
-    if (kbankQrImg) kbankQrImg.src = `https://promptpay.io/${KBANK_ACCOUNT}/${total}.png`;
-    if (scbQrImg) scbQrImg.src = `https://promptpay.io/${SCB_ACCOUNT}/${total}.png`;
 
     const payAmount = document.getElementById("pay-amount");
     if (payAmount) payAmount.innerText = formatPrice(total);

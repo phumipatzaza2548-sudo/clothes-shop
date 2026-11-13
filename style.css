@@ -528,6 +528,19 @@ html[data-theme="light"] .theme-toggle-btn .theme-icon-moon {
     transition: background 0.2s ease, color 0.2s ease;
 }
 
+.dropdown-list li[hidden] {
+    display: none;
+}
+
+.dropdown-list li > a {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
 .dropdown-list li svg {
     width: 17px;
     height: 17px;
@@ -4520,71 +4533,6 @@ body.modal-open {
     transform: none;
 }
 
-.demo-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.8rem;
-    margin-top: 1.15rem;
-    padding: 0.8rem 0.9rem;
-    background: var(--paper-2);
-    border: 1px dashed var(--paper-line-strong);
-    border-radius: 14px;
-}
-
-.demo-copy {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    min-width: 0;
-}
-
-.demo-badge {
-    padding: 0.22rem 0.45rem;
-    background: var(--ink);
-    border-radius: 6px;
-    color: #ffffff;
-    font-size: 0.58rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-}
-
-.demo-copy > div {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.35;
-}
-
-.demo-copy strong {
-    color: var(--ink);
-    font-size: 0.82rem;
-    font-weight: 500;
-}
-
-.demo-copy span {
-    color: var(--ink-muted);
-    font-size: 0.73rem;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
-.demo-btn {
-    padding: 0.42rem 0.75rem;
-    flex-shrink: 0;
-    background: #ffffff;
-    border: 1px solid var(--paper-line-strong);
-    border-radius: 999px;
-    color: var(--ink-soft);
-    font-size: 0.76rem;
-    font-weight: 500;
-    transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.demo-btn:hover {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: #ffffff;
-}
-
 .auth-switch {
     margin-top: 1.25rem;
     color: var(--ink-muted);
@@ -4747,16 +4695,6 @@ body.modal-open {
 
     .auth-subtitle {
         font-size: 0.86rem;
-    }
-
-    .demo-card {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 0.65rem;
-    }
-
-    .demo-btn {
-        width: 100%;
     }
 
     .form-two-col {
@@ -5305,4 +5243,532 @@ html[data-theme="dark"] .gender-option:has(input:checked) {
     background: var(--surface-3);
     border-color: var(--text);
     color: var(--text);
+}
+
+/* ==================== Admin inventory ==================== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.admin-back-link {
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--text);
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.admin-back-link:hover {
+    background: var(--surface-2);
+}
+
+.admin-page {
+    width: min(var(--maxw), calc(100% - 3rem));
+    margin: 3rem auto 5rem;
+}
+
+.admin-heading {
+    margin-bottom: 1.5rem;
+}
+
+.admin-eyebrow {
+    color: var(--muted-2);
+    font-size: 0.76rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.admin-heading h1 {
+    margin-top: 0.35rem;
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+    font-weight: 600;
+}
+
+.admin-heading p,
+.admin-inventory-heading p {
+    color: var(--muted-2);
+    font-size: 0.9rem;
+}
+
+.admin-demo-notice {
+    margin-bottom: 1.5rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-left: 3px solid #f59e0b;
+    border-radius: var(--radius-sm);
+    background: rgba(245, 158, 11, 0.08);
+    color: var(--muted);
+    font-size: 0.83rem;
+}
+
+.admin-demo-notice strong {
+    color: var(--text);
+}
+
+.admin-login-panel {
+    max-width: 460px;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+}
+
+.admin-login-panel h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.admin-login-panel > p {
+    margin-top: 0.25rem;
+    color: var(--muted-2);
+    font-size: 0.84rem;
+}
+
+.admin-login-form {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 1rem;
+}
+
+.admin-login-form label {
+    font-size: 0.82rem;
+}
+
+.admin-login-form input {
+    min-height: 42px;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: var(--bg-soft);
+    color: var(--text);
+}
+
+.admin-login-form button,
+.admin-logout-button {
+    min-height: 40px;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 0.84rem;
+}
+
+.admin-login-form button {
+    margin-top: 0.35rem;
+    border-color: var(--text);
+    background: var(--text);
+    color: var(--bg);
+}
+
+.admin-login-form button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.admin-login-panel .admin-message {
+    margin: 0.85rem 0 0;
+}
+
+.admin-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.admin-summary-card {
+    min-height: 120px;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+}
+
+.admin-summary-card > span,
+.admin-summary-card small {
+    display: block;
+    color: var(--muted-2);
+    font-size: 0.82rem;
+}
+
+.admin-summary-card strong {
+    display: inline-block;
+    margin: 0.25rem 0.3rem 0 0;
+    font-size: 1.8rem;
+    line-height: 1.2;
+}
+
+.admin-orders {
+    margin-bottom: 2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    overflow: hidden;
+}
+
+.admin-orders-list {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem 1.25rem;
+}
+
+.admin-orders-list > .admin-empty {
+    margin: 0;
+    color: var(--muted-2);
+    text-align: center;
+}
+
+.admin-order-card {
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--bg-soft);
+}
+
+.admin-order-card-heading,
+.admin-order-total {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.admin-order-card-heading > div {
+    display: grid;
+    gap: 0.2rem;
+}
+
+.admin-order-card-heading time,
+.admin-order-card-heading > span {
+    color: var(--muted-2);
+    font-size: 0.78rem;
+}
+
+.admin-order-items {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0.9rem 0;
+    padding: 0;
+    list-style: none;
+}
+
+.admin-order-items li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+.admin-order-total {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+}
+
+.admin-order-review {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.admin-order-slip {
+    display: grid;
+    gap: 0.35rem;
+    color: var(--text);
+    font-size: 0.78rem;
+    text-decoration: none;
+}
+
+.admin-order-slip img {
+    width: 116px;
+    height: 116px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface-2);
+    object-fit: cover;
+}
+
+.admin-order-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+
+.admin-order-actions button {
+    min-height: 40px;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 0.8rem;
+}
+
+.admin-order-actions [data-order-action="approve"] {
+    border-color: var(--text);
+    background: var(--text);
+    color: var(--bg);
+}
+
+.admin-order-actions button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.admin-order-slip-expired {
+    color: var(--danger);
+    font-size: 0.82rem;
+}
+
+.admin-inventory {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    overflow: hidden;
+}
+
+.admin-inventory-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.2rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+}
+
+.admin-inventory-heading h2 {
+    margin-bottom: 0.2rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.admin-filters {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.admin-filters input,
+.admin-filters select,
+.admin-restock-form input,
+.admin-restock-form select {
+    min-height: 40px;
+    padding: 0.45rem 0.65rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: var(--bg-soft);
+    color: var(--text);
+    font-size: 0.82rem;
+}
+
+.admin-filters input {
+    width: min(230px, 36vw);
+}
+
+.admin-filters select {
+    min-width: 130px;
+}
+
+.admin-message {
+    display: none;
+    margin: 0.8rem 1.25rem 0;
+    color: var(--success);
+    font-size: 0.85rem;
+}
+
+.admin-message.is-visible {
+    display: block;
+}
+
+.admin-message.is-error {
+    color: var(--danger);
+}
+
+.admin-table-scroll {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    min-width: 790px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th {
+    padding: 0.75rem 1rem;
+    color: var(--muted-2);
+    font-size: 0.74rem;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 0.85rem 1rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.84rem;
+    vertical-align: middle;
+}
+
+.admin-product {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 210px;
+}
+
+.admin-product img {
+    width: 48px;
+    height: 58px;
+    border-radius: 8px;
+    background: var(--surface-2);
+    object-fit: cover;
+}
+
+.admin-product small {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--muted-2);
+    font-size: 0.72rem;
+}
+
+.admin-stock-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+}
+
+.admin-stock-list li {
+    display: inline-flex;
+    gap: 0.3rem;
+    padding: 0.25rem 0.45rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 0.74rem;
+    white-space: nowrap;
+}
+
+.admin-stock-list li strong {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.admin-stock-list li.is-low {
+    border-color: rgba(245, 158, 11, 0.4);
+    color: #fbbf24;
+}
+
+.admin-stock-list li.is-empty {
+    border-color: rgba(248, 113, 113, 0.4);
+    color: var(--danger);
+}
+
+.admin-stock-list li.is-empty strong {
+    color: var(--danger);
+}
+
+.admin-restock-form {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.admin-restock-form select {
+    min-width: 85px;
+}
+
+.admin-restock-form input {
+    width: 70px;
+}
+
+.admin-restock-form button {
+    min-height: 40px;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--text);
+    border-radius: 8px;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.admin-restock-form button:hover {
+    opacity: 0.82;
+}
+
+.admin-table .admin-empty {
+    padding: 2rem 1rem;
+    color: var(--muted-2);
+    text-align: center;
+}
+
+.admin-back-link:focus-visible,
+.admin-login-form input:focus-visible,
+.admin-login-form button:focus-visible,
+.admin-logout-button:focus-visible,
+.admin-filters input:focus-visible,
+.admin-filters select:focus-visible,
+.admin-restock-form select:focus-visible,
+.admin-restock-form input:focus-visible,
+.admin-restock-form button:focus-visible,
+.admin-order-slip:focus-visible,
+.admin-order-actions button:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+    .admin-page {
+        width: calc(100% - 2rem);
+        margin-top: 2rem;
+    }
+
+    .admin-inventory-heading {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-filters input {
+        width: 100%;
+    }
+
+    .admin-filters select {
+        flex: 0 0 auto;
+    }
+
+    .admin-order-items li {
+        flex-direction: column;
+        gap: 0.1rem;
+    }
+
+    .admin-order-review,
+    .admin-order-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-order-actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .admin-filters {
+        flex-direction: column;
+    }
 }

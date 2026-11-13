@@ -1,0 +1,2 @@
+[functions.cleanup-expired-slips]
+verify_jwt = false

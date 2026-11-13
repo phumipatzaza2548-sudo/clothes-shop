@@ -2,10 +2,15 @@
 (function () {
     const loginForm = document.getElementById("login-form");
     const registerForm = document.getElementById("register-form");
-    const demoButton = document.getElementById("demo-login");
     const messageBox = document.getElementById("auth-message");
 
-    let demoAccountReady = ensureDemoAccount();
+    let supabaseClient = null;
+    let supabaseConfigError = null;
+    try {
+        supabaseClient = getSharedSupabaseClient();
+    } catch (error) {
+        supabaseConfigError = error;
+    }
 
     /* ---------- Shared helpers ---------- */
     function showMessage(message, type = "error") {
@@ -30,41 +35,12 @@
         if (label) label.textContent = isBusy ? busyText : idleText;
     }
 
-    function goToShop() {
-        window.location.href = "shop.html";
+    function goToPage(page) {
+        window.location.assign(page);
     }
 
     function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
-    }
-
-    async function ensureDemoAccount() {
-        let users = getShopUsers();
-        const demoIndex = users.findIndex((user) => normalizeIdentity(user.username) === "demo");
-        const passwordHash = await hashPassword("123456");
-
-        if (demoIndex >= 0) {
-            if (!users[demoIndex].passwordHash) {
-                users[demoIndex].passwordHash = passwordHash;
-                saveShopUsers(users);
-            }
-            return;
-        }
-
-        users = [{
-            username: "demo",
-            fullname: "ผู้ใช้ทดลอง",
-            email: "demo@myclothingshop.test",
-            phone: "0812345678",
-            passwordHash,
-            gender: "",
-            birthdate: "",
-            avatar: "",
-            address: {},
-            createdAt: Date.now()
-        }, ...users];
-
-        saveShopUsers(users);
     }
 
     /* ---------- Password visibility ---------- */
@@ -133,65 +109,39 @@
             event.preventDefault();
             clearMessage();
 
-            const identity = loginForm.elements.username.value.trim();
+            const email = loginForm.elements.email.value.trim();
             const password = loginForm.elements.password.value;
 
-            if (!identity || !password) {
-                showMessage("กรุณากรอกชื่อผู้ใช้หรืออีเมล และรหัสผ่านให้ครบถ้วน");
+            if (!email || !password) {
+                showMessage("กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน");
                 return;
             }
 
             setButtonBusy(submitButton, true, "กำลังเข้าสู่ระบบ...");
 
             try {
-                await demoAccountReady;
-                const user = findShopUser(identity);
-
-                if (!user) {
-                    showMessage("ไม่พบบัญชีนี้ในระบบ กรุณาตรวจสอบข้อมูลหรือสมัครสมาชิกก่อนเข้าใช้งาน");
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+                if (error || !data.user) {
+                    showMessage("อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองอีกครั้ง");
                     return;
                 }
 
-                const passwordHash = await hashPassword(password);
-                if (user.passwordHash !== passwordHash) {
-                    showMessage("รหัสผ่านไม่ถูกต้อง กรุณาลองอีกครั้ง");
-                    return;
-                }
-
-                setCurrentUsername(user.username);
-                showMessage("เข้าสู่ระบบสำเร็จ กำลังพาคุณไปที่ร้านค้า...", "success");
-                window.setTimeout(goToShop, 650);
+                const destination = await getAuthLandingPage(supabaseClient);
+                upsertShopUserFromAuthUser(data.user);
+                showMessage("เข้าสู่ระบบสำเร็จ กำลังพาคุณไป...", "success");
+                window.setTimeout(() => goToPage(destination), 450);
             } catch (error) {
                 console.error("Login error:", error);
-                showMessage("เกิดข้อผิดพลาดในการเข้าสู่ระบบ กรุณาลองใหม่อีกครั้ง");
+                showMessage(error.message || "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
             } finally {
                 setButtonBusy(submitButton, false, "");
             }
         });
 
         loginForm.addEventListener("input", clearMessage);
-
-        if (demoButton) {
-            demoButton.addEventListener("click", async () => {
-                clearMessage();
-                demoButton.disabled = true;
-                const originalText = demoButton.textContent;
-                demoButton.textContent = "กำลังเตรียมบัญชีทดลอง...";
-
-                try {
-                    await demoAccountReady;
-                    loginForm.elements.username.value = "demo";
-                    loginForm.elements.password.value = "123456";
-                    showMessage("กรอกบัญชีทดลองให้แล้ว กำลังเข้าสู่ระบบ...", "success");
-                    window.setTimeout(() => loginForm.requestSubmit(), 250);
-                } catch (error) {
-                    console.error("Demo account error:", error);
-                    demoButton.disabled = false;
-                    demoButton.textContent = originalText;
-                    showMessage("ไม่สามารถเตรียมบัญชีทดลองได้ กรุณาลองใหม่");
-                }
-            });
-        }
     }
 
     /* ---------- Register ---------- */
@@ -240,44 +190,34 @@
                 return;
             }
 
-            const users = getShopUsers();
-            const usernameExists = users.some((user) => normalizeIdentity(user.username) === normalizeIdentity(username));
-            if (usernameExists) {
-                showMessage("ชื่อผู้ใช้นี้ถูกใช้งานแล้ว กรุณาเลือกชื่ออื่น");
-                return;
-            }
-
-            const emailExists = users.some((user) => normalizeIdentity(user.email) === normalizeIdentity(email));
-            if (emailExists) {
-                showMessage("อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่นหรือเข้าสู่ระบบ");
-                return;
-            }
-
             setButtonBusy(submitButton, true, "กำลังสร้างบัญชี...");
 
             try {
-                const passwordHash = await hashPassword(password);
-                const newUser = {
-                    username,
-                    fullname,
+                const { data, error } = await supabaseClient.auth.signUp({
                     email,
-                    phone,
-                    passwordHash,
-                    gender: "",
-                    birthdate: "",
-                    avatar: "",
-                    address: {},
-                    createdAt: Date.now()
-                };
+                    password,
+                    options: {
+                        data: { username, fullname, phone },
+                        emailRedirectTo: `${window.location.origin}/index.html`
+                    }
+                });
+                if (error || !data.user) {
+                    showMessage("สมัครสมาชิกไม่สำเร็จ กรุณาตรวจสอบข้อมูลและลองใหม่");
+                    return;
+                }
 
-                users.push(newUser);
-                saveShopUsers(users);
-                setCurrentUsername(username);
-                showMessage("สมัครสมาชิกสำเร็จ กำลังพาคุณไปที่ร้านค้า...", "success");
-                window.setTimeout(goToShop, 800);
+                if (!data.session) {
+                    showMessage("สมัครสำเร็จแล้ว กรุณายืนยันอีเมลจากกล่องจดหมายก่อนเข้าสู่ระบบ", "success");
+                    return;
+                }
+
+                const destination = await getAuthLandingPage(supabaseClient);
+                upsertShopUserFromAuthUser(data.user);
+                showMessage("สมัครสมาชิกสำเร็จ กำลังพาคุณไป...", "success");
+                window.setTimeout(() => goToPage(destination), 450);
             } catch (error) {
                 console.error("Register error:", error);
-                showMessage("เกิดข้อผิดพลาดในการสร้างบัญชี กรุณาลองใหม่อีกครั้ง");
+                showMessage(error.message || "สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
             } finally {
                 setButtonBusy(submitButton, false, "");
             }
@@ -285,4 +225,32 @@
 
         registerForm.addEventListener("input", clearMessage);
     }
+
+    if (!supabaseClient) {
+        showMessage(supabaseConfigError?.message || "ยังไม่ได้ตั้งค่า Supabase", "error");
+        document.querySelectorAll(".auth-submit").forEach((button) => {
+            button.disabled = true;
+        });
+        return;
+    }
+
+    async function redirectExistingSession() {
+        const { data, error } = await supabaseClient.auth.getSession();
+        if (error) {
+            showMessage("ตรวจสอบสถานะการเข้าสู่ระบบไม่ได้ กรุณารีเฟรชหน้า", "error");
+            return;
+        }
+        if (!data.session?.user) return;
+
+        try {
+            const destination = await getAuthLandingPage(supabaseClient);
+            upsertShopUserFromAuthUser(data.session.user);
+            goToPage(destination);
+        } catch (error) {
+            console.error("Session role check failed:", error);
+            showMessage(error.message || "ตรวจสอบสิทธิ์บัญชีไม่ได้ กรุณาลองใหม่");
+        }
+    }
+
+    redirectExistingSession();
 })();

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0e0e10">
+    <title>จัดการสต๊อก — My Clothing Shop</title>
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem("shop_theme");
+                var theme = savedTheme === "light" ? "light" : "dark";
+                document.documentElement.setAttribute("data-theme", theme);
+                var themeColor = document.querySelector('meta[name="theme-color"]');
+                if (themeColor) themeColor.setAttribute("content", theme === "light" ? "#f6f1e7" : "#0e0e10");
+            } catch (error) {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="shop.html" aria-label="My Clothing Shop หน้าแรก">
+                <span class="brand-mark">M</span>
+                <span class="brand-text">
+                    <span class="brand-name">My Clothing Shop</span>
+                    <span class="brand-sub">จัดการร้านค้า</span>
+                </span>
+            </a>
+            <a class="admin-back-link" href="shop.html">กลับไปหน้าร้าน</a>
+        </div>
+    </header>
+
+    <main class="admin-page">
+        <section class="admin-heading" aria-labelledby="admin-title">
+            <span class="admin-eyebrow">Inventory management</span>
+            <h1 id="admin-title">จัดการสต๊อกสินค้า</h1>
+            <p>ตรวจสอบจำนวนคงเหลือและเติมสินค้าในแต่ละไซส์</p>
+        </section>
+
+        <aside class="admin-demo-notice" role="note">
+            <strong>ระบบแอดมิน:</strong>
+            ต้องเข้าสู่ระบบบัญชีแอดมิน และสิทธิ์จะถูกตรวจสอบซ้ำที่ฐานข้อมูลทุกครั้งที่แก้สต๊อก
+        </aside>
+        <aside class="admin-demo-notice" role="note">
+            คำสั่งซื้อจะหักสต๊อกเมื่อแอดมินตรวจสอบและอนุมัติแล้วเท่านั้น สลิปจะเปิดดูได้ 15 วัน
+        </aside>
+
+        <section id="admin-login-panel" class="admin-login-panel" aria-labelledby="admin-login-title">
+            <h2 id="admin-login-title">เข้าสู่ระบบแอดมิน</h2>
+            <p>ใช้บัญชี Supabase ชุดเดียวกับหน้าร้าน บัญชีที่ไม่ได้รับสิทธิ์แอดมินจะเข้าใช้งานไม่ได้</p>
+            <form id="admin-login-form" class="admin-login-form">
+                <label for="admin-email">อีเมลแอดมิน</label>
+                <input id="admin-email" name="email" type="email" autocomplete="username" required>
+                <label for="admin-password">รหัสผ่าน</label>
+                <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
+                <button id="admin-login-submit" type="submit">เข้าสู่ระบบ</button>
+            </form>
+            <p id="admin-auth-message" class="admin-message is-visible" role="status" aria-live="polite">
+                กำลังตรวจสอบการตั้งค่าระบบ...
+            </p>
+        </section>
+
+        <div id="admin-dashboard" hidden>
+            <section class="admin-summary" aria-label="สรุปยอดขายและสต๊อกสินค้า">
+                <article class="admin-summary-card admin-sales-summary-card">
+                    <span>ยอดขายรวม</span>
+                    <strong id="admin-total-sales" aria-live="polite">กำลังโหลด...</strong>
+                    <small id="admin-sales-order-count">เฉพาะคำสั่งซื้อที่อนุมัติแล้ว</small>
+                </article>
+                <article class="admin-summary-card">
+                    <span>สินค้าคงเหลือทั้งหมด</span>
+                    <strong id="admin-total-units">0</strong>
+                    <small>ชิ้น</small>
+                </article>
+                <article class="admin-summary-card">
+                    <span>สินค้าใกล้หมด</span>
+                    <strong id="admin-low-stock">0</strong>
+                    <small>รายการ · คงเหลือไม่เกิน 5 ชิ้น</small>
+                </article>
+                <article class="admin-summary-card">
+                    <span>ไซส์ที่หมด</span>
+                    <strong id="admin-out-of-stock">0</strong>
+                    <small>ไซส์</small>
+                </article>
+                <article class="admin-summary-card">
+                    <span>สินค้าที่หมดทุกไซส์</span>
+                    <strong id="admin-sold-out-products">0</strong>
+                    <small>สินค้า</small>
+                </article>
+            </section>
+
+            <section class="admin-orders" aria-labelledby="admin-orders-title">
+                <div class="admin-inventory-heading">
+                    <div>
+                        <h2 id="admin-orders-title">คำสั่งซื้อรอตรวจสอบ</h2>
+                        <p>อนุมัติหลังตรวจยอดโอนแล้วจึงหักสต๊อก คำสั่งซื้อที่รอตรวจยังไม่จองสินค้า</p>
+                    </div>
+                </div>
+                <p id="admin-order-message" class="admin-message" role="status" aria-live="polite"></p>
+                <div id="admin-orders-list" class="admin-orders-list">
+                    <p class="admin-empty">กำลังโหลดคำสั่งซื้อ...</p>
+                </div>
+            </section>
+
+            <section class="admin-inventory" aria-labelledby="inventory-title">
+                <div class="admin-inventory-heading">
+                    <div>
+                        <h2 id="inventory-title">รายการสินค้า</h2>
+                        <p>ยอดคงเหลืออัปเดตทันทีหลังเติมสินค้า</p>
+                    </div>
+                    <button class="admin-logout-button" id="admin-logout" type="button">ออกจากระบบ</button>
+                    <div class="admin-filters">
+                        <label class="sr-only" for="inventory-search">ค้นหาสินค้า</label>
+                        <input id="inventory-search" type="search" placeholder="ค้นหาสินค้า..." autocomplete="off">
+                        <label class="sr-only" for="inventory-category">เลือกหมวดหมู่</label>
+                        <select id="inventory-category">
+                            <option value="all">ทุกหมวดหมู่</option>
+                            <option value="shirt">เสื้อ</option>
+                            <option value="pants">กางเกง</option>
+                            <option value="shoe">รองเท้า</option>
+                            <option value="hat">หมวก</option>
+                        </select>
+                    </div>
+                </div>
+
+                <p id="admin-message" class="admin-message" role="status" aria-live="polite"></p>
+
+                <div class="admin-table-scroll" tabindex="0" aria-label="ตารางสต๊อกสินค้า เลื่อนแนวนอนได้">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">สินค้า</th>
+                                <th scope="col">หมวดหมู่</th>
+                                <th scope="col">คงเหลือแยกตามไซส์</th>
+                                <th scope="col">เติมสต๊อก</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="supabase-auth.js"></script>
+    <script src="inventory.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

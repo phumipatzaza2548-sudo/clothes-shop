@@ -1,214 +1,3 @@
-/* ==================== ข้อมูลสินค้า ==================== */
-const PRODUCT_IMAGE_DIR = "assets/images/products";
-
-const products = [
-    { id: 1, name: "เสื้อยืดสีขาว", price: 150, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p01.webp` },
-    { id: 2, name: "เสื้อยืดสีดำ", price: 150, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p02.webp` },
-    { id: 3, name: "เสื้อ Polo", price: 500, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p03.webp` },
-    { id: 4, name: "เสื้อฮู้ดดี้", price: 700, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p04.webp` },
-    { id: 5, name: "เสื้อเชิ้ตแขนยาว", price: 300, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p05.webp` },
-    { id: 6, name: "เสื้อกล้ามผู้หญิง", price: 200, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p06.webp` },
-    { id: 7, name: "เสื้อกล้ามผู้ชาย", price: 150, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p07.webp` },
-    { id: 8, name: "กางเกงยีนส์ขาสั้น", price: 300, category: "pants", image: `${PRODUCT_IMAGE_DIR}/p08.webp` },
-    { id: 9, name: "กางเกงยีนส์ Baggy", price: 350, category: "pants", image: `${PRODUCT_IMAGE_DIR}/p09.webp` },
-    { id: 10, name: "กางเกงสแล็คชาย", price: 350, category: "pants", image: `${PRODUCT_IMAGE_DIR}/p10.webp` },
-    { id: 11, name: "หมวกแก๊ปขาว", price: 250, category: "hat", image: `${PRODUCT_IMAGE_DIR}/p11.webp` },
-    { id: 12, name: "หมวกแก๊ปเขียว", price: 250, category: "hat", image: `${PRODUCT_IMAGE_DIR}/p12.webp` },
-    { id: 13, name: "หมวกแก๊ปน้ำเงิน", price: 250, category: "hat", image: `${PRODUCT_IMAGE_DIR}/p13.webp` },
-    { id: 14, name: "หมวกแก๊ปครีม", price: 250, category: "hat", image: `${PRODUCT_IMAGE_DIR}/p14.webp` },
-    { id: 15, name: "เสื้อยืดคอกลมสีขาว", price: 190, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p15.webp` },
-    { id: 16, name: "เสื้อเชิ้ตแขนยาวสีขาว", price: 420, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p16.webp` },
-    { id: 17, name: "เสื้อกล้ามสีขาว", price: 180, category: "shirt", image: `${PRODUCT_IMAGE_DIR}/p17.webp` },
-    { id: 18, name: "กางเกงออกกำลังกาย", price: 290, category: "pants", image: `${PRODUCT_IMAGE_DIR}/p18.webp` },
-    { id: 19, name: "กางเกงบอลลูน", price: 450, category: "pants", image: `${PRODUCT_IMAGE_DIR}/p19.webp` },
-    { id: 20, name: "รองเท้าผ้าใบแฟชั่นสีขาว", price: 1290, category: "shoe", image: `${PRODUCT_IMAGE_DIR}/p20.webp` },
-    { id: 21, name: "รองเท้าผ้าใบแฟชั่นสีชมพู", price: 1190, category: "shoe", image: `${PRODUCT_IMAGE_DIR}/p21.webp` },
-    { id: 22, name: "รองเท้าผ้าใบแฟชั่นสีดำ-ขาว", price: 1490, category: "shoe", image: `${PRODUCT_IMAGE_DIR}/p22.webp` },
-    { id: 23, name: "รองเท้าวิ่งสีเทา", price: 1590, category: "shoe", image: `${PRODUCT_IMAGE_DIR}/p23.webp` },
-    { id: 24, name: "รองเท้าวิ่งสีขาว", price: 1690, category: "shoe", image: `${PRODUCT_IMAGE_DIR}/p24.webp` }
-];
-
-const PRODUCT_IMAGE_ALIASES = {
-    "เสื้อยืสีขาว.jpg": `${PRODUCT_IMAGE_DIR}/p01.webp`,
-    "ยืดดำ.jpg": `${PRODUCT_IMAGE_DIR}/p02.webp`,
-    "polo.jpg": `${PRODUCT_IMAGE_DIR}/p03.webp`,
-    "ฮุ้ดดี้.jpg": `${PRODUCT_IMAGE_DIR}/p04.webp`,
-    "เชิ้ตแขนยาว 2.jpg": `${PRODUCT_IMAGE_DIR}/p05.webp`,
-    "กล้ามหญิง.jpg": `${PRODUCT_IMAGE_DIR}/p06.webp`,
-    "กล้ามชาย 1.jpg": `${PRODUCT_IMAGE_DIR}/p07.webp`,
-    "ขาสั้น.jpg": `${PRODUCT_IMAGE_DIR}/p08.webp`,
-    "Bagy.jpg": `${PRODUCT_IMAGE_DIR}/p09.webp`,
-    "สแล็คชาย.jpg": `${PRODUCT_IMAGE_DIR}/p10.webp`,
-    "แก็บขาว.jpg": `${PRODUCT_IMAGE_DIR}/p11.webp`,
-    "เเก็ปเขียว.jpg": `${PRODUCT_IMAGE_DIR}/p12.webp`,
-    "แก็บน้ำเงิน.jpg": `${PRODUCT_IMAGE_DIR}/p13.webp`,
-    "เเก็บครีม.jpg": `${PRODUCT_IMAGE_DIR}/p14.webp`,
-    "ยืดขาว 1.jpg": `${PRODUCT_IMAGE_DIR}/p15.webp`,
-    "เสื้อเชิ๊ตแขนยาว.jpg": `${PRODUCT_IMAGE_DIR}/p16.webp`,
-    "กล้ามชาย.jpg": `${PRODUCT_IMAGE_DIR}/p17.webp`,
-    "กางเกงออกกำลังกาย.jpg": `${PRODUCT_IMAGE_DIR}/p18.webp`,
-    "บอลลูน.jpg": `${PRODUCT_IMAGE_DIR}/p19.webp`,
-    "shoe-fashion-white.jpg": `${PRODUCT_IMAGE_DIR}/p20.webp`,
-    "shoe-fashion-pink.jpg": `${PRODUCT_IMAGE_DIR}/p21.webp`,
-    "shoe-fashion-black-white.jpg": `${PRODUCT_IMAGE_DIR}/p22.webp`,
-    "shoe-running-gray.jpg": `${PRODUCT_IMAGE_DIR}/p23.webp`,
-    "shoe-running-white.jpg": `${PRODUCT_IMAGE_DIR}/p24.webp`
-};
-
-function resolveProductImage(image) {
-    if (!image) return `${PRODUCT_IMAGE_DIR}/p01.webp`;
-    if (image.startsWith("assets/")) return image;
-    return PRODUCT_IMAGE_ALIASES[image] || image;
-}
-
-const CATEGORY_LABELS = {
-    shirt: "เสื้อ",
-    pants: "กางเกง",
-    shoe: "รองเท้า",
-    hat: "หมวก"
-};
-
-const PRODUCT_SIZES = {
-    shirt: ["S", "M", "L", "XL"],
-    pants: ["28", "30", "32", "34", "36"],
-    shoe: ["38", "39", "40", "41", "42", "43", "44"]
-};
-
-function getProductSizes(product) {
-    return PRODUCT_SIZES[product.category] || [];
-}
-
-/* ==================== สต็อกสินค้า ==================== */
-const STOCK_STORAGE_KEY = "shop_stock_v1";
-
-const DEFAULT_PRODUCT_STOCK = {
-    1: { S: 6, M: 8, L: 8, XL: 0 },
-    2: { S: 5, M: 7, L: 7, XL: 3 },
-    3: { S: 4, M: 6, L: 6, XL: 2 },
-    4: { S: 4, M: 5, L: 3, XL: 2 },
-    5: { S: 2, M: 4, L: 4, XL: 2 },
-    6: { S: 5, M: 5, L: 4, XL: 2 },
-    7: { S: 6, M: 6, L: 5, XL: 3 },
-    8: { 28: 4, 30: 5, 32: 5, 34: 4, 36: 2 },
-    9: { 28: 5, 30: 6, 32: 7, 34: 5, 36: 3 },
-    10: { 28: 3, 30: 4, 32: 4, 34: 2, 36: 0 },
-    11: { onesize: 9 },
-    12: { onesize: 6 },
-    13: { onesize: 5 },
-    14: { onesize: 2 },
-    15: { S: 8, M: 10, L: 9, XL: 4 },
-    16: { S: 3, M: 5, L: 4, XL: 2 },
-    17: { S: 6, M: 7, L: 5, XL: 3 },
-    18: { 28: 4, 30: 6, 32: 6, 34: 4, 36: 2 },
-    19: { 28: 3, 30: 5, 32: 5, 34: 3, 36: 0 },
-    20: { 38: 2, 39: 4, 40: 5, 41: 4, 42: 3, 43: 2, 44: 0 },
-    21: { 38: 3, 39: 4, 40: 4, 41: 3, 42: 2, 43: 1, 44: 1 },
-    22: { 38: 0, 39: 2, 40: 3, 41: 3, 42: 2, 43: 2, 44: 1 },
-    23: { 38: 2, 39: 3, 40: 4, 41: 4, 42: 3, 43: 2, 44: 1 },
-    24: { 38: 3, 39: 5, 40: 5, 41: 4, 42: 3, 43: 2, 44: 0 }
-};
-
-function createDefaultStock() {
-    const stock = {};
-    products.forEach((product) => {
-        stock[product.id] = { ...(DEFAULT_PRODUCT_STOCK[product.id] || {}) };
-    });
-    return stock;
-}
-
-function getStockKeys(product) {
-    const sizes = getProductSizes(product);
-    return sizes.length > 0 ? sizes : ["onesize"];
-}
-
-function normalizeProductStock(rawStock) {
-    const defaults = createDefaultStock();
-    if (!rawStock || typeof rawStock !== "object") return defaults;
-
-    const normalized = {};
-    products.forEach((product) => {
-        normalized[product.id] = {};
-        getStockKeys(product).forEach((key) => {
-            const fallback = Math.max(0, Number(defaults[product.id]?.[key]) || 0);
-            const rawValue = rawStock[product.id]?.[key];
-            const numericValue = Number(rawValue);
-            const isValid = rawValue !== undefined
-                && rawValue !== null
-                && rawValue !== ""
-                && Number.isFinite(numericValue);
-
-            normalized[product.id][key] = isValid
-                ? Math.max(0, Math.floor(numericValue))
-                : fallback;
-        });
-    });
-
-    return normalized;
-}
-
-function loadProductStock() {
-    let storedStock = null;
-
-    try {
-        storedStock = JSON.parse(localStorage.getItem(STOCK_STORAGE_KEY) || "null");
-    } catch {
-        storedStock = null;
-    }
-
-    const stock = normalizeProductStock(storedStock);
-
-    try {
-        localStorage.setItem(STOCK_STORAGE_KEY, JSON.stringify(stock));
-    } catch {
-        // ใช้งานต่อได้แม้เบราว์เซอร์ไม่ให้บันทึก localStorage
-    }
-
-    return stock;
-}
-
-let productStock = loadProductStock();
-
-function saveProductStock() {
-    try {
-        localStorage.setItem(STOCK_STORAGE_KEY, JSON.stringify(productStock));
-    } catch {
-        // ใช้งานต่อได้แม้เบราว์เซอร์ไม่ให้บันทึก localStorage
-    }
-}
-
-function getProductStock(productId, size = "") {
-    const product = products.find((item) => item.id === productId);
-    if (!product) return 0;
-
-    const key = getProductSizes(product).length > 0 ? String(size || "") : "onesize";
-    if (!key) return 0;
-
-    return Math.max(0, Number(productStock?.[productId]?.[key]) || 0);
-}
-
-function getProductTotalStock(product) {
-    return getStockKeys(product).reduce(
-        (sum, key) => sum + Math.max(0, Number(productStock?.[product.id]?.[key]) || 0),
-        0
-    );
-}
-
-function getCartItemStock(item) {
-    return getProductStock(item.id, item.size || "");
-}
-
-function decrementProductStock(item) {
-    const product = products.find((entry) => entry.id === item.id);
-    if (!product) return;
-
-    const key = getProductSizes(product).length > 0 ? String(item.size || "") : "onesize";
-    if (!key) return;
-
-    const currentEntry = productStock[item.id] || {};
-    currentEntry[key] = Math.max(0, (Number(currentEntry[key]) || 0) - (item.qty || 1));
-    productStock[item.id] = currentEntry;
-}
-
 const KBANK_ACCOUNT = "0762790998";
 const SCB_ACCOUNT = "0001206020";
 const KBANK_ACCOUNT_DISPLAY = "076-2-79099-8";
@@ -224,6 +13,13 @@ const selectedProductSizes = {};
 let toastTimer;
 let selectedBank = "kbank";
 let pendingAvatarData = null;
+let pendingCheckoutOrderId = null;
+let isCheckoutStarting = false;
+let isOrderSubmitting = false;
+
+function invalidatePendingCheckoutOrder() {
+    pendingCheckoutOrderId = null;
+}
 
 /* ==================== Helpers ==================== */
 function formatPrice(value) {
@@ -597,8 +393,10 @@ function addToCart(productId) {
             showToast(`สินค้าเหลือเพียง ${formatPrice(stock)} ชิ้น`);
             return;
         }
+        invalidatePendingCheckoutOrder();
         existingItem.qty = (existingItem.qty || 1) + 1;
     } else {
+        invalidatePendingCheckoutOrder();
         cart.push({
             id: product.id,
             name: product.name,
@@ -640,12 +438,14 @@ function changeQty(index, delta) {
             return;
         }
 
+        invalidatePendingCheckoutOrder();
         item.qty = Math.min(stock, currentQty + delta);
 
         if (item.qty === stock) {
             showToast(`เพิ่มครบจำนวนคงเหลือ ${formatPrice(stock)} ชิ้นแล้ว`);
         }
     } else {
+        invalidatePendingCheckoutOrder();
         item.qty = currentQty + delta;
         if (item.qty <= 0) {
             cart.splice(index, 1);
@@ -657,12 +457,14 @@ function changeQty(index, delta) {
 
 function removeFromCart(index) {
     if (!cart[index]) return;
+    invalidatePendingCheckoutOrder();
     cart.splice(index, 1);
     updateCartUI();
 }
 
 function clearCart() {
     if (cart.length === 0) return;
+    invalidatePendingCheckoutOrder();
     cart = [];
     updateCartUI();
     showToast("ล้างตะกร้าเรียบร้อยแล้ว");
@@ -784,10 +586,37 @@ function setCheckoutStep(stepCount) {
     });
 }
 
-function checkout() {
+async function checkout() {
     if (cart.length === 0) {
         showToast("กรุณาเลือกสินค้าก่อนสั่งซื้อ");
         return;
+    }
+
+    if (isCheckoutStarting) return;
+    isCheckoutStarting = true;
+    const checkoutButton = document.getElementById("checkout-btn");
+    if (checkoutButton) checkoutButton.disabled = true;
+
+    try {
+        const { data, error } = await getSharedSupabaseClient().auth.getUser();
+        if (error) throw error;
+        if (!data.user) {
+            showToast("กรุณาเข้าสู่ระบบก่อนสั่งซื้อ");
+            return;
+        }
+        if (!pendingCheckoutOrderId) {
+            if (typeof window.crypto?.randomUUID !== "function") {
+                throw new Error("เบราว์เซอร์นี้ไม่รองรับการสร้างรหัสคำสั่งซื้อ");
+            }
+            pendingCheckoutOrderId = window.crypto.randomUUID();
+        }
+    } catch (error) {
+        console.error("Checkout account check failed:", error);
+        showToast("ตรวจสอบบัญชีไม่สำเร็จ กรุณาลองใหม่");
+        return;
+    } finally {
+        isCheckoutStarting = false;
+        if (checkoutButton) checkoutButton.disabled = false;
     }
 
     const total = getCartTotal();
@@ -891,11 +720,19 @@ function showReceipt(order, slipSource) {
     const orderDate = document.getElementById("receipt-order-date");
     const itemsList = document.getElementById("receipt-items-list");
     const total = document.getElementById("receipt-total-price");
+    const receiptSub = document.getElementById("receipt-sub");
     const slipContainer = document.getElementById("receipt-slip-container");
     const slipImage = document.getElementById("receipt-slip-img");
 
     if (orderId) orderId.textContent = order.id;
     if (orderDate) orderDate.textContent = order.date;
+    if (receiptSub) {
+        receiptSub.textContent = order.status === "อนุมัติแล้ว"
+            ? "แอดมินตรวจสอบและอนุมัติคำสั่งซื้อแล้ว"
+            : order.status === "ปฏิเสธคำสั่งซื้อ"
+                ? "คำสั่งซื้อถูกปฏิเสธ กรุณาตรวจสอบประวัติคำสั่งซื้อ"
+                : "รอแอดมินตรวจสอบการชำระเงินก่อนตัดสต๊อก";
+    }
 
     if (itemsList) {
         itemsList.innerHTML = order.items.map((item) => {
@@ -924,7 +761,10 @@ function showReceipt(order, slipSource) {
     openModal("receipt-modal");
 }
 
-function confirmPayment() {
+async function confirmPayment() {
+    const confirmButton = document.getElementById("confirm-payment-btn");
+    if (isOrderSubmitting) return;
+
     try {
         const slipInput = document.getElementById("slip-input");
         const slipFile = slipInput && slipInput.files ? slipInput.files[0] : null;
@@ -949,13 +789,30 @@ function confirmPayment() {
             return;
         }
 
+        if (!pendingCheckoutOrderId) {
+            showToast("กรุณาเริ่มขั้นตอนชำระเงินใหม่");
+            return;
+        }
+
         const total = getCartTotal();
         const slipPreview = document.getElementById("slip-preview");
         const slipSource = slipPreview ? slipPreview.src : "";
+        isOrderSubmitting = true;
+        if (confirmButton) {
+            confirmButton.disabled = true;
+            confirmButton.textContent = "กำลังส่งคำสั่งซื้อ...";
+        }
+
+        const orderResponse = await submitStoreOrder(getSharedSupabaseClient(), {
+            orderId: pendingCheckoutOrderId,
+            items: cart,
+            bank: selectedBank,
+            slipFile
+        });
 
         const orderData = {
-            id: "ORD-" + Date.now().toString().slice(-6),
-            date: new Date().toLocaleString("th-TH"),
+            id: `ORD-${pendingCheckoutOrderId.slice(0, 8).toUpperCase()}`,
+            date: new Date(orderResponse.data.created_at).toLocaleString("th-TH"),
             items: cart.map((item) => ({
                 id: item.id,
                 name: item.name,
@@ -964,27 +821,42 @@ function confirmPayment() {
                 size: item.size || "",
                 image: resolveProductImage(item.image)
             })),
-            totalPrice: total,
+            totalPrice: Number(orderResponse.data.total_amount),
             bank: selectedBank,
-            status: "รอดำเนินการ"
+            status: {
+                pending: "รอแอดมินตรวจสอบ",
+                approved: "อนุมัติแล้ว",
+                rejected: "ปฏิเสธคำสั่งซื้อ"
+            }[orderResponse.data.status]
         };
 
         const orders = loadOrders();
         orders.unshift(orderData);
-        saveOrders(orders);
-
-        // ตัดสต็อกหลังชำระเงินสำเร็จ และอัปเดตการ์ดสินค้าให้เห็นจำนวนคงเหลือล่าสุด
-        cart.forEach((item) => decrementProductStock(item));
-        saveProductStock();
+        try {
+            saveOrders(orders);
+        } catch (error) {
+            console.error("Could not save local order history:", error);
+            showToast("ส่งคำสั่งซื้อแล้ว แต่บันทึกประวัติในอุปกรณ์นี้ไม่สำเร็จ");
+        }
 
         cart = [];
+        pendingCheckoutOrderId = null;
         updateCartUI();
         displayProducts();
         closePayment();
         showReceipt(orderData, slipSource);
+        if (total !== orderData.totalPrice) {
+            showToast("ยอดคำสั่งซื้อถูกปรับตามราคาที่ระบบกำหนด");
+        }
     } catch (error) {
         console.error("Error in confirmPayment:", error);
-        showToast("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+        showToast(error.message || "ส่งคำสั่งซื้อไม่สำเร็จ กรุณาลองใหม่");
+    } finally {
+        isOrderSubmitting = false;
+        if (confirmButton) {
+            confirmButton.textContent = "ส่งสลิปเพื่อตรวจสอบ";
+            confirmButton.disabled = !document.getElementById("slip-input")?.files?.length;
+        }
     }
 }
 
@@ -1059,33 +931,81 @@ function toggleProfileMenu() {
     if (dropdown) dropdown.classList.toggle("show");
 }
 
-function logout() {
+async function logout() {
+    let signOutError = null;
+    try {
+        const { error } = await getSharedSupabaseClient().auth.signOut({ scope: "local" });
+        signOutError = error;
+    } catch (error) {
+        console.error("Logout error:", error);
+        showToast("ออกจากระบบไม่สำเร็จ กรุณาลองใหม่");
+        return;
+    }
+
     clearCurrentUsername();
-    showToast("ออกจากระบบเรียบร้อยแล้ว");
+    showToast(signOutError
+        ? "ออกจากระบบในอุปกรณ์นี้แล้ว แต่ยืนยันกับเซิร์ฟเวอร์ไม่สำเร็จ"
+        : "ออกจากระบบเรียบร้อยแล้ว");
     window.setTimeout(() => {
         window.location.href = "index.html";
     }, 550);
 }
 
+async function initializeShopAuthState() {
+    const adminLink = document.getElementById("admin-dashboard-item");
+    let user = null;
+    try {
+        const client = getSharedSupabaseClient();
+        const { data: sessionData, error: sessionError } = await client.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (sessionData.session?.user) {
+            const { data: userData, error: userError } = await client.auth.getUser();
+            if (userError || !userData.user) throw userError || new Error("ไม่พบบัญชีที่เข้าสู่ระบบ");
+            user = userData.user;
+            upsertShopUserFromAuthUser(user);
+        } else {
+            clearCurrentUsername();
+        }
+    } catch (error) {
+        console.error("Shop session check failed:", error);
+        clearCurrentUsername();
+    }
+
+    initUserDisplay();
+    if (!user || !adminLink) return;
+
+    try {
+        adminLink.hidden = !await isCurrentUserAdmin(getSharedSupabaseClient());
+    } catch (error) {
+        console.error("Admin navigation check failed:", error);
+    }
+}
+
 function initUserDisplay() {
     const user = getCurrentShopUser();
-    const username = user ? user.username : getCurrentUsername();
+    const username = user ? user.username : "";
     const displayName = (user && user.fullname)
         || username
-        || "ผู้ใช้งาน";
+        || "ผู้เยี่ยมชม";
     const secondaryText = (user && user.email)
-        || (username ? `@${username}` : "ยินดีต้อนรับกลับมา");
+        || "ยินดีต้อนรับกลับมา";
     const avatar = (user && user.avatar) || "assets/images/avatars/user.jpg";
 
     const display = document.getElementById("user-display");
     const subDisplay = document.getElementById("profile-sub");
     const avatarImg = document.getElementById("avatar-img");
     const logoutButton = document.getElementById("header-logout-btn");
+    const loginItem = document.getElementById("shop-login-item");
+    const authenticatedItems = document.querySelectorAll("[data-auth-required]");
 
     if (display) display.innerText = displayName;
     if (subDisplay) subDisplay.innerText = secondaryText;
     if (avatarImg) avatarImg.src = avatar;
-    if (logoutButton) logoutButton.hidden = !(user || username);
+    if (logoutButton) logoutButton.hidden = !user;
+    if (loginItem) loginItem.hidden = Boolean(user);
+    authenticatedItems.forEach((item) => {
+        item.hidden = !user;
+    });
 }
 
 /* ==================== ข้อมูลส่วนตัว ==================== */
@@ -1327,13 +1247,113 @@ function saveAddressData(event) {
 }
 
 /* ==================== ประวัติการสั่งซื้อ ==================== */
-function openOrderHistoryModal() {
+async function loadStoreOrderHistory() {
+    const client = getSharedSupabaseClient();
+    const { data: userData, error: userError } = await client.auth.getUser();
+    if (userError) throw new Error("ตรวจสอบบัญชีเพื่อโหลดประวัติคำสั่งซื้อไม่ได้");
+    if (!userData.user) return loadOrders();
+
+    const { data: orders, error: orderError } = await client
+        .from("store_orders")
+        .select("id, status, bank, total_amount, created_at")
+        .eq("user_id", userData.user.id)
+        .order("created_at", { ascending: false });
+    if (orderError || !Array.isArray(orders)) {
+        throw new Error("โหลดประวัติคำสั่งซื้อจากฐานข้อมูลไม่สำเร็จ");
+    }
+
+    for (const order of orders) {
+        if (typeof order.id !== "string"
+            || !["pending", "approved", "rejected"].includes(order.status)
+            || !["kbank", "scb"].includes(order.bank)
+            || !Number.isSafeInteger(order.total_amount) || order.total_amount < 1
+            || !Number.isFinite(Date.parse(order.created_at))) {
+            throw new Error("ข้อมูลประวัติคำสั่งซื้อไม่ถูกต้อง");
+        }
+    }
+
+    let orderItems = [];
+    if (orders.length > 0) {
+        const { data, error } = await client
+            .from("store_order_items")
+            .select("order_id, product_id, size, quantity, unit_price")
+            .in("order_id", orders.map((order) => order.id));
+        if (error) throw new Error("โหลดรายการสินค้าในคำสั่งซื้อไม่สำเร็จ");
+        orderItems = data || [];
+    }
+
+    const itemsByOrder = new Map();
+    orderItems.forEach((item) => {
+        const product = products.find((entry) => entry.id === item.product_id);
+        if (!orders.some((order) => order.id === item.order_id)
+            || !product || !getStockKeys(product).includes(item.size)
+            || !Number.isSafeInteger(item.quantity) || item.quantity < 1
+            || !Number.isSafeInteger(item.unit_price) || item.unit_price < 1) {
+            throw new Error("ข้อมูลรายการคำสั่งซื้อไม่ถูกต้อง");
+        }
+        const items = itemsByOrder.get(item.order_id) || [];
+        items.push({
+            id: product.id,
+            name: product.name,
+            price: item.unit_price,
+            qty: item.quantity,
+            size: item.size === "onesize" ? "" : item.size,
+            image: product.image
+        });
+        itemsByOrder.set(item.order_id, items);
+    });
+
+    const statusLabels = {
+        pending: "รอแอดมินตรวจสอบ",
+        approved: "อนุมัติแล้ว",
+        rejected: "ปฏิเสธคำสั่งซื้อ"
+    };
+    const storedOrders = orders.map((order) => {
+        const items = itemsByOrder.get(order.id) || [];
+        const calculatedTotal = items.reduce((total, item) => total + item.price * item.qty, 0);
+        if (items.length === 0 || calculatedTotal !== order.total_amount) {
+            throw new Error("ยอดรวมคำสั่งซื้อไม่ตรงกับรายการสินค้า");
+        }
+
+        return {
+            id: `ORD-${order.id.slice(0, 8).toUpperCase()}`,
+            date: new Date(order.created_at).toLocaleString("th-TH"),
+            items,
+            totalPrice: order.total_amount,
+            bank: order.bank,
+            status: statusLabels[order.status] || "ไม่ทราบสถานะ"
+        };
+    });
+
+    const storedIds = new Set(storedOrders.map((order) => order.id));
+    const mergedOrders = storedOrders.concat(
+        loadOrders().filter((order) => !storedIds.has(order.id))
+    );
+    try {
+        saveOrders(mergedOrders);
+    } catch (error) {
+        console.error("Could not update local order history:", error);
+    }
+    return mergedOrders;
+}
+
+async function openOrderHistoryModal() {
     closeProfileDropdown();
 
     const container = document.getElementById("order-history-list");
-    const orders = loadOrders();
-
     if (!container) return;
+
+    container.innerHTML = '<p class="orders-empty">กำลังโหลดประวัติคำสั่งซื้อ...</p>';
+    openModal("order-history-modal");
+
+    let orders;
+    try {
+        orders = await loadStoreOrderHistory();
+    } catch (error) {
+        console.error("Order history load failed:", error);
+        showToast(error.message || "โหลดประวัติคำสั่งซื้อไม่สำเร็จ");
+        orders = loadOrders();
+    }
 
     if (orders.length === 0) {
         container.innerHTML = `
@@ -1376,7 +1396,6 @@ function openOrderHistoryModal() {
         `).join("");
     }
 
-    openModal("order-history-modal");
 }
 
 function closeOrderHistoryModal() {
@@ -1455,6 +1474,26 @@ function initTheme() {
     applyTheme(getStoredTheme());
 }
 
+let isShopInventorySyncRunning = false;
+
+async function syncShopInventory() {
+    if (isShopInventorySyncRunning) return;
+    isShopInventorySyncRunning = true;
+
+    try {
+        const hasChanged = await syncProductStockFromSupabase(getSharedSupabaseClient());
+        if (hasChanged) {
+            displayProducts();
+            updateCartUI();
+        }
+    } catch (error) {
+        console.error("Shop inventory sync failed:", error);
+        showToast("โหลดสต๊อกล่าสุดไม่ได้ ข้อมูลที่แสดงอาจไม่เป็นปัจจุบัน");
+    } finally {
+        isShopInventorySyncRunning = false;
+    }
+}
+
 window.addEventListener("storage", (event) => {
     if (event.key === THEME_STORAGE_KEY) {
         applyTheme(event.newValue, { persist: false });
@@ -1463,6 +1502,8 @@ window.addEventListener("storage", (event) => {
 
 /* ==================== เริ่มต้นการทำงาน ==================== */
 initTheme();
-initUserDisplay();
+initializeShopAuthState();
 displayProducts();
 updateCartUI();
+syncShopInventory();
+window.addEventListener("focus", syncShopInventory);

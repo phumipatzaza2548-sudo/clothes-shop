@@ -77,10 +77,10 @@
 
                 <form id="login-form" class="auth-form" novalidate>
                     <div class="form-field">
-                        <label for="username">ชื่อผู้ใช้หรืออีเมล</label>
+                        <label for="email">อีเมล</label>
                         <div class="input-wrap">
                             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
-                            <input type="text" id="username" name="username" placeholder="กรอกชื่อผู้ใช้หรืออีเมล" autocomplete="username" required>
+                            <input type="email" id="email" name="email" placeholder="กรอกอีเมล" autocomplete="email" required>
                         </div>
                     </div>
 
@@ -99,23 +99,15 @@
                     </button>
                 </form>
 
-                <div class="demo-card">
-                    <div class="demo-copy">
-                        <span class="demo-badge">DEMO</span>
-                        <div>
-                            <strong>บัญชีทดลอง</strong>
-                            <span>demo / 123456</span>
-                        </div>
-                    </div>
-                    <button type="button" class="demo-btn" id="demo-login">เข้าใช้งาน</button>
-                </div>
-
                 <p class="auth-switch">ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิก</a></p>
-                <p class="auth-note">ข้อมูลบัญชีถูกจัดเก็บไว้ในเบราว์เซอร์นี้เพื่อการสาธิต ไม่ได้ส่งไปยังเซิร์ฟเวอร์</p>
+                <p class="auth-note">บัญชีเข้าสู่ระบบด้วย Supabase ส่วนข้อมูลโปรไฟล์เพิ่มเติมและประวัติคำสั่งซื้อยังเก็บไว้ในเบราว์เซอร์นี้</p>
             </div>
         </main>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="supabase-auth.js"></script>
     <script src="store.js"></script>
     <script src="auth.js"></script>
 </body>

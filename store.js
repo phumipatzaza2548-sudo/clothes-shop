@@ -1,8 +1,8 @@
 /* ==================== Shared local account store ==================== */
 const SHOP_USERS_KEY = "shop_users";
 const SHOP_CURRENT_USER_KEY = "currentUser";
+const SHOP_CURRENT_AUTH_ID_KEY = "currentSupabaseUserId";
 const SHOP_LEGACY_ORDERS_KEY = "my_orders";
-const SHOP_PASSWORD_PREFIX = "my-clothing-shop::v1::";
 
 function safeParseJSON(value, fallback) {
     try {
@@ -19,21 +19,16 @@ function getShopUsers() {
 }
 
 function saveShopUsers(users) {
-    localStorage.setItem(SHOP_USERS_KEY, JSON.stringify(users));
+    const profiles = users.map((user) => {
+        const profile = { ...user };
+        delete profile.passwordHash;
+        return profile;
+    });
+    localStorage.setItem(SHOP_USERS_KEY, JSON.stringify(profiles));
 }
 
 function normalizeIdentity(value) {
     return String(value || "").trim().toLowerCase();
-}
-
-function findShopUser(identity) {
-    const key = normalizeIdentity(identity);
-    if (!key) return null;
-
-    return getShopUsers().find((user) => (
-        normalizeIdentity(user.username) === key
-        || normalizeIdentity(user.email) === key
-    )) || null;
 }
 
 function getCurrentUsername() {
@@ -46,22 +41,64 @@ function setCurrentUsername(username) {
 
 function clearCurrentUsername() {
     localStorage.removeItem(SHOP_CURRENT_USER_KEY);
+    localStorage.removeItem(SHOP_CURRENT_AUTH_ID_KEY);
 }
 
 function getCurrentShopUser() {
-    const username = getCurrentUsername();
-    if (!username) return null;
-    return findShopUser(username);
+    const userId = localStorage.getItem(SHOP_CURRENT_AUTH_ID_KEY);
+    if (!userId) return null;
+
+    return getShopUsers().find((user) => user.supabaseUserId === userId) || null;
+}
+
+function upsertShopUserFromAuthUser(authUser) {
+    if (!authUser || !authUser.id || !authUser.email) {
+        throw new Error("ข้อมูลบัญชีจาก Supabase ไม่ครบถ้วน");
+    }
+
+    const users = getShopUsers();
+    const email = normalizeIdentity(authUser.email);
+    const index = users.findIndex((user) => (
+        user.supabaseUserId === authUser.id
+        || normalizeIdentity(user.email) === email
+    ));
+    const existing = index === -1 ? {} : users[index];
+    const existingProfile = { ...existing };
+    delete existingProfile.passwordHash;
+    const metadata = authUser.user_metadata || {};
+    const username = String(existing.username || metadata.username || email.split("@")[0]).trim();
+    const profile = {
+        ...existingProfile,
+        supabaseUserId: authUser.id,
+        username,
+        fullname: existing.fullname || metadata.fullname || username,
+        email: authUser.email,
+        phone: existing.phone || metadata.phone || "",
+        gender: existing.gender || "",
+        birthdate: existing.birthdate || "",
+        avatar: existing.avatar || "",
+        address: existing.address || {},
+        createdAt: existing.createdAt || Date.now()
+    };
+
+    if (index === -1) {
+        users.push(profile);
+    } else {
+        users[index] = profile;
+    }
+
+    saveShopUsers(users);
+    setCurrentUsername(username);
+    localStorage.setItem(SHOP_CURRENT_AUTH_ID_KEY, authUser.id);
+    return profile;
 }
 
 function updateCurrentShopUser(updates) {
-    const username = getCurrentUsername();
-    if (!username) return null;
+    const userId = localStorage.getItem(SHOP_CURRENT_AUTH_ID_KEY);
+    if (!userId) return null;
 
     const users = getShopUsers();
-    const index = users.findIndex((user) => (
-        normalizeIdentity(user.username) === normalizeIdentity(username)
-    ));
+    const index = users.findIndex((user) => user.supabaseUserId === userId);
 
     if (index === -1) return null;
 
@@ -99,26 +136,4 @@ function loadOrders() {
 
 function saveOrders(orders) {
     localStorage.setItem(getOrdersStorageKey(), JSON.stringify(orders));
-}
-
-async function hashPassword(password) {
-    const value = `${SHOP_PASSWORD_PREFIX}${password}`;
-
-    if (window.crypto && window.crypto.subtle) {
-        const digest = await window.crypto.subtle.digest(
-            "SHA-256",
-            new TextEncoder().encode(value)
-        );
-
-        return Array.from(new Uint8Array(digest))
-            .map((byte) => byte.toString(16).padStart(2, "0"))
-            .join("");
-    }
-
-    // fallback สำหรับเบราว์เซอร์ที่ไม่มี Web Crypto
-    let hash = 5381;
-    for (let i = 0; i < value.length; i += 1) {
-        hash = ((hash << 5) + hash) ^ value.charCodeAt(i);
-    }
-    return `fallback_${(hash >>> 0).toString(16)}`;
 }

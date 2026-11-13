@@ -94,23 +94,35 @@
                             <span class="profile-sub" id="profile-sub">ยินดีต้อนรับกลับมา</span>
                         </div>
                         <ul class="dropdown-list">
-                            <li onclick="openProfileModal()">
+                            <li id="shop-login-item">
+                                <a href="index.html">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="m10 17 5-5-5-5M15 12H3"></path></svg>
+                                    เข้าสู่ระบบ / สมัครสมาชิก
+                                </a>
+                            </li>
+                            <li data-auth-required hidden onclick="openProfileModal()">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
                                 ข้อมูลส่วนตัว
                             </li>
-                            <li onclick="openAddressModal()">
+                            <li data-auth-required hidden onclick="openAddressModal()">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                                 ที่อยู่จัดส่ง
                             </li>
-                            <li onclick="openOrderHistoryModal()">
+                            <li data-auth-required hidden onclick="openOrderHistoryModal()">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2Z"></path><path d="M9 7h6M9 11h6M9 15h4"></path></svg>
                                 ประวัติการสั่งซื้อ
+                            </li>
+                            <li id="admin-dashboard-item" hidden>
+                                <a href="admin.html">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15v-4M12 15V7M16 15V9M20 15V4"></path></svg>
+                                    จัดการร้านค้า
+                                </a>
                             </li>
                             <li onclick="toggleCart()">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M2 3h2.5l2.3 11.2a1.5 1.5 0 0 0 1.5 1.2h9.2a1.5 1.5 0 0 0 1.5-1.2L21 7H6"></path></svg>
                                 ตะกร้าของฉัน
                             </li>
-                            <li class="logout-item" onclick="logout()">
+                            <li class="logout-item" data-auth-required hidden onclick="logout()">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5M21 12H9"></path></svg>
                                 ออกจากระบบ
                             </li>
@@ -360,8 +372,8 @@
                 </div>
             </div>
 
-            <p class="payment-help">ตรวจสอบยอดเงินและบัญชีปลายทางให้ถูกต้องก่อนกดยืนยัน</p>
-            <button class="confirm-btn" id="confirm-payment-btn" onclick="confirmPayment()" disabled>ยืนยันการชำระเงิน</button>
+            <p class="payment-help">ตรวจยอดและบัญชีปลายทางให้ถูกต้อง คำสั่งซื้อจะรอแอดมินตรวจสลิปก่อนหักสต๊อก</p>
+            <button class="confirm-btn" id="confirm-payment-btn" onclick="confirmPayment()" disabled>ส่งสลิปเพื่อตรวจสอบ</button>
         </div>
     </div>
 
@@ -373,9 +385,9 @@
                 <div class="success-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"></path></svg>
                 </div>
-                <span class="modal-eyebrow">Order confirmed</span>
-                <h2 class="modal-title">สั่งซื้อสำเร็จ</h2>
-                <p class="receipt-sub">ขอบคุณที่ช้อปกับเรา เราได้รับคำสั่งซื้อของคุณแล้ว</p>
+                <span class="modal-eyebrow">Order submitted</span>
+                <h2 class="modal-title">ส่งคำสั่งซื้อแล้ว</h2>
+                <p class="receipt-sub" id="receipt-sub">รอแอดมินตรวจสอบการชำระเงินก่อนตัดสต๊อก</p>
                 <div class="receipt-meta">
                     <span id="receipt-order-id">ORD-000000</span>
                     <span id="receipt-order-date">-</span>
@@ -444,7 +456,7 @@
 
                 <div class="profile-form-group">
                     <label for="profile-email">อีเมล</label>
-                    <input type="email" id="profile-email" class="profile-input-box" placeholder="example@email.com" autocomplete="email" required>
+                    <input type="email" id="profile-email" class="profile-input-box" placeholder="example@email.com" autocomplete="email" readonly required>
                 </div>
 
                 <div class="form-two-col">
@@ -471,7 +483,7 @@
                     </div>
                 </div>
 
-                <p class="profile-note">ข้อมูลและรูปโปรไฟล์จะถูกบันทึกไว้ในบัญชีของคุณบนเบราว์เซอร์นี้</p>
+                <p class="profile-note">อีเมลนี้ใช้เข้าสู่ระบบ ส่วนข้อมูลโปรไฟล์เพิ่มเติมและรูปภาพจะบันทึกไว้ในเบราว์เซอร์นี้</p>
                 <button type="submit" class="btn-save-profile">บันทึกข้อมูลส่วนตัว</button>
             </form>
         </div>
@@ -589,7 +601,12 @@
     <!-- Toast แจ้งเตือนเพิ่มสินค้า -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="supabase-auth.js"></script>
     <script src="store.js"></script>
+    <script src="inventory.js"></script>
+    <script src="supabase-orders.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

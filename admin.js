@@ -247,7 +247,7 @@ async function showAdminDashboard() {
     dashboard.hidden = false;
     loginForm.reset();
     try {
-        await Promise.all([loadPendingOrders(), loadSalesSummary()]);
+        await Promise.all([loadPendingOrders(), loadSalesSummary(), loadDashboardInsights(supabaseClient)]);
     } catch (error) {
         showAdminOrderMessage(error.message || "โหลดข้อมูลแดชบอร์ดไม่สำเร็จ", true);
     }
@@ -343,7 +343,7 @@ adminOrdersList.addEventListener("click", async (event) => {
                 : "ปฏิเสธคำสั่งซื้อไม่สำเร็จ");
         }
 
-        await Promise.all([loadInventory(), loadPendingOrders(), loadSalesSummary()]);
+        await Promise.all([loadInventory(), loadPendingOrders(), loadSalesSummary(), loadDashboardInsights(supabaseClient)]);
         showAdminOrderMessage(action === "approve_store_order"
             ? "อนุมัติคำสั่งซื้อและหักสต๊อกเรียบร้อย"
             : "ปฏิเสธคำสั่งซื้อเรียบร้อย");
@@ -358,7 +358,7 @@ inventorySearch.addEventListener("input", renderInventory);
 inventoryCategory.addEventListener("change", renderInventory);
 window.addEventListener("focus", () => {
     if (dashboard.hidden) return;
-    Promise.all([loadInventory(), loadPendingOrders(), loadSalesSummary()]).catch((error) => {
+    Promise.all([loadInventory(), loadPendingOrders(), loadSalesSummary(), loadDashboardInsights(supabaseClient)]).catch((error) => {
         showAdminOrderMessage(error.message || "รีเฟรชข้อมูลไม่สำเร็จ", true);
     });
 });

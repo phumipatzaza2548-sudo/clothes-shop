@@ -67,6 +67,45 @@
         </section>
 
         <div id="admin-dashboard" hidden>
+            <section class="admin-insights" aria-labelledby="insights-title">
+                <div class="admin-inventory-heading">
+                    <div>
+                        <h2 id="insights-title">ภาพรวมร้าน 30 วันล่าสุด</h2>
+                        <p>ยอดขายนับเฉพาะคำสั่งซื้อที่อนุมัติแล้ว ตามวันที่ลูกค้าสั่งซื้อ</p>
+                    </div>
+                </div>
+                <p id="insights-message" class="admin-message" role="status" aria-live="polite"></p>
+
+                <div class="insights-tiles" id="insights-sales-tiles"></div>
+
+                <article class="insights-card">
+                    <h3>ยอดขายรายวัน</h3>
+                    <div id="insights-daily-chart" class="insights-daily-chart">
+                        <p class="admin-empty">กำลังโหลด...</p>
+                    </div>
+                    <details class="insights-table-toggle">
+                        <summary>ดูเป็นตาราง</summary>
+                        <div class="admin-table-scroll">
+                            <table class="admin-table" id="insights-daily-table"></table>
+                        </div>
+                    </details>
+                </article>
+
+                <div class="insights-grid">
+                    <article class="insights-card">
+                        <h3>สินค้าขายดี 5 อันดับ</h3>
+                        <div id="insights-top-products"></div>
+                    </article>
+                    <article class="insights-card">
+                        <h3>ยอดขายแยกตามหมวด</h3>
+                        <div id="insights-categories"></div>
+                    </article>
+                </div>
+
+                <h3 class="insights-subtitle">สถานะคำสั่งซื้อ</h3>
+                <div class="insights-tiles" id="insights-status-tiles"></div>
+            </section>
+
             <section class="admin-summary" aria-label="สรุปยอดขายและสต๊อกสินค้า">
                 <article class="admin-summary-card admin-sales-summary-card">
                     <span>ยอดขายรวม</span>
@@ -153,6 +192,7 @@
     <script src="supabase-auth.js"></script>
     <script src="inventory.js"></script>
     <script src="supabase-orders.js"></script>
+    <script src="admin-dashboard.js"></script>
     <script src="admin.js"></script>
 </body>
 </html>

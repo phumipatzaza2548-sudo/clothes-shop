@@ -100,9 +100,12 @@ function getVisibleProducts() {
     return products.filter((product) => {
         const categoryLabel = CATEGORY_LABELS[product.category] || "";
         const matchCategory = currentCategory === "all" || product.category === currentCategory;
+        // ค้นได้ทั้งชื่อไทยและชื่อในภาษาที่เลือกอยู่ (i18n.js)
         const matchSearch = !query
             || product.name.toLowerCase().includes(query)
-            || categoryLabel.includes(query);
+            || categoryLabel.includes(query)
+            || translateText(product.name).toLowerCase().includes(query)
+            || translateText(categoryLabel).toLowerCase().includes(query);
 
         return matchCategory && matchSearch;
     });

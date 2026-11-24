@@ -5717,3 +5717,177 @@ html[data-theme="dark"] .gender-option:has(input:checked) {
         flex-direction: column;
     }
 }
+
+/* ==================== Dashboard ภาพรวมร้าน (หน้าแอดมิน) ==================== */
+.admin-insights {
+    --chart-1: #3987e5;
+    margin-bottom: 2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    overflow: hidden;
+}
+
+html[data-theme="light"] .admin-insights {
+    --chart-1: #2a78d6;
+}
+
+.admin-insights > .admin-message,
+.insights-tiles,
+.insights-card,
+.insights-grid,
+.insights-subtitle {
+    margin: 1.25rem 1.25rem 0;
+}
+
+.admin-insights > :last-child {
+    margin-bottom: 1.25rem;
+}
+
+.insights-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 1rem;
+}
+
+.insights-tiles .admin-summary-card {
+    min-height: 0;
+}
+
+.insights-card {
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+}
+
+.insights-card h3,
+.insights-subtitle {
+    margin-bottom: 0.8rem;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 1rem;
+}
+
+.insights-grid .insights-card {
+    margin: 0;
+}
+
+.insights-daily-svg {
+    display: block;
+    width: 100%;
+    height: 180px;
+}
+
+.insights-bar {
+    fill: var(--chart-1);
+}
+
+.insights-bar-hit {
+    fill: transparent;
+}
+
+.insights-bar-group:hover .insights-bar-hit {
+    fill: var(--line);
+}
+
+.insights-baseline {
+    stroke: var(--line-strong);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+}
+
+.insights-grid-line {
+    stroke: var(--line);
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+    vector-effect: non-scaling-stroke;
+}
+
+.insights-peak {
+    margin-bottom: 0.5rem;
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+.insights-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.4rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.insights-table-toggle {
+    margin-top: 0.8rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.insights-table-toggle summary {
+    cursor: pointer;
+}
+
+.insights-table-toggle .admin-table-scroll {
+    max-height: 280px;
+    margin-top: 0.6rem;
+    overflow-y: auto;
+}
+
+.insights-rows {
+    display: grid;
+    gap: 0.75rem;
+    list-style: none;
+}
+
+.insights-rows li {
+    display: grid;
+    grid-template-columns: minmax(0, 9rem) minmax(0, 1fr) 9rem;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.86rem;
+}
+
+.insights-row-name {
+    overflow: hidden;
+    color: var(--text);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.insights-row-track {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--line);
+    overflow: hidden;
+}
+
+.insights-row-fill {
+    display: block;
+    height: 100%;
+    border-radius: 4px;
+    background: var(--chart-1);
+}
+
+.insights-row-value {
+    color: var(--muted);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    .insights-rows li {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .insights-row-track {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+}

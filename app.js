@@ -24,16 +24,6 @@ function formatPrice(value) {
     return Number(value || 0).toLocaleString("th-TH");
 }
 
-function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, (char) => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-    }[char]));
-}
-
 function showToast(message) {
     const toast = document.getElementById("toast");
     if (!toast) return;
@@ -815,11 +805,7 @@ async function confirmPayment() {
             })),
             totalPrice: Number(orderResponse.data.total_amount),
             bank: selectedBank,
-            status: {
-                pending: "รอแอดมินตรวจสอบ",
-                approved: "อนุมัติแล้ว",
-                rejected: "ปฏิเสธคำสั่งซื้อ"
-            }[orderResponse.data.status]
+            status: ORDER_STATUS_LABELS[orderResponse.data.status]
         };
 
         const orders = loadOrders();
@@ -1089,11 +1075,9 @@ async function saveProfileData(event) {
 
     const fullnameInput = document.getElementById("profile-fullname");
     const phoneInput = document.getElementById("profile-phone");
-    const emailInput = document.getElementById("profile-email");
     const birthdateInput = document.getElementById("profile-birthdate");
 
     const fullname = fullnameInput ? fullnameInput.value.trim() : "";
-    const email = emailInput ? emailInput.value.trim() : "";
     const phone = normalizePhone(phoneInput ? phoneInput.value : "");
     const birthdate = birthdateInput ? birthdateInput.value : "";
     const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
@@ -1101,12 +1085,6 @@ async function saveProfileData(event) {
     if (fullname.length < 2) {
         showToast("กรุณากรอกชื่อ - นามสกุลอย่างน้อย 2 ตัวอักษร");
         fullnameInput?.focus();
-        return;
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-        showToast("กรุณากรอกอีเมลให้ถูกต้อง");
-        emailInput?.focus();
         return;
     }
 
@@ -1119,17 +1097,6 @@ async function saveProfileData(event) {
     const user = getCurrentShopUser();
     if (!user) {
         showToast("กรุณาเข้าสู่ระบบก่อนบันทึกข้อมูลส่วนตัว");
-        return;
-    }
-
-    const emailTaken = getShopUsers().some((account) => (
-        normalizeIdentity(account.email) === normalizeIdentity(email)
-        && normalizeIdentity(account.username) !== normalizeIdentity(user.username)
-    ));
-
-    if (emailTaken) {
-        showToast("อีเมลนี้ถูกใช้งานโดยบัญชีอื่น กรุณาใช้อีเมลอื่น");
-        emailInput?.focus();
         return;
     }
 
@@ -1146,7 +1113,6 @@ async function saveProfileData(event) {
 
     const updates = {
         fullname,
-        email,
         phone,
         birthdate,
         gender
@@ -1166,7 +1132,7 @@ async function saveProfileData(event) {
     const avatarPreview = document.getElementById("profile-avatar-preview");
 
     if (userDisplay) userDisplay.innerText = fullname;
-    if (profileSub) profileSub.innerText = email;
+    if (profileSub) profileSub.innerText = user.email;
     if (headerAvatar) headerAvatar.src = avatar;
     if (nameDisplay) nameDisplay.textContent = fullname;
     if (avatarPreview) avatarPreview.src = avatar;
@@ -1275,58 +1241,22 @@ async function loadStoreOrderHistory() {
         }
     }
 
-    let orderItems = [];
-    if (orders.length > 0) {
-        const { data, error } = await client
-            .from("store_order_items")
-            .select("order_id, product_id, size, quantity, unit_price")
-            .in("order_id", orders.map((order) => order.id));
-        if (error) throw new Error("โหลดรายการสินค้าในคำสั่งซื้อไม่สำเร็จ");
-        orderItems = data || [];
-    }
-
-    const itemsByOrder = new Map();
-    orderItems.forEach((item) => {
-        const product = products.find((entry) => entry.id === item.product_id);
-        if (!orders.some((order) => order.id === item.order_id)
-            || !product || !getStockKeys(product).includes(item.size)
-            || !Number.isSafeInteger(item.quantity) || item.quantity < 1
-            || !Number.isSafeInteger(item.unit_price) || item.unit_price < 1) {
-            throw new Error("ข้อมูลรายการคำสั่งซื้อไม่ถูกต้อง");
-        }
-        const items = itemsByOrder.get(item.order_id) || [];
-        items.push({
-            id: product.id,
-            name: product.name,
+    const itemsByOrder = await loadOrderItems(client, orders);
+    const storedOrders = orders.map((order) => ({
+        id: `ORD-${order.id.slice(0, 8).toUpperCase()}`,
+        date: new Date(order.created_at).toLocaleString("th-TH"),
+        items: itemsByOrder.get(order.id).map((item) => ({
+            id: item.product.id,
+            name: item.product.name,
             price: item.unit_price,
             qty: item.quantity,
             size: item.size === "onesize" ? "" : item.size,
-            image: product.image
-        });
-        itemsByOrder.set(item.order_id, items);
-    });
-
-    const statusLabels = {
-        pending: "รอแอดมินตรวจสอบ",
-        approved: "อนุมัติแล้ว",
-        rejected: "ปฏิเสธคำสั่งซื้อ"
-    };
-    const storedOrders = orders.map((order) => {
-        const items = itemsByOrder.get(order.id) || [];
-        const calculatedTotal = items.reduce((total, item) => total + item.price * item.qty, 0);
-        if (items.length === 0 || calculatedTotal !== order.total_amount) {
-            throw new Error("ยอดรวมคำสั่งซื้อไม่ตรงกับรายการสินค้า");
-        }
-
-        return {
-            id: `ORD-${order.id.slice(0, 8).toUpperCase()}`,
-            date: new Date(order.created_at).toLocaleString("th-TH"),
-            items,
-            totalPrice: order.total_amount,
-            bank: order.bank,
-            status: statusLabels[order.status] || "ไม่ทราบสถานะ"
-        };
-    });
+            image: item.product.image
+        })),
+        totalPrice: order.total_amount,
+        bank: order.bank,
+        status: ORDER_STATUS_LABELS[order.status] || "ไม่ทราบสถานะ"
+    }));
 
     const storedIds = new Set(storedOrders.map((order) => order.id));
     const mergedOrders = storedOrders.concat(

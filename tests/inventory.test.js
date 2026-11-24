@@ -9,18 +9,8 @@ const inventorySource = fs.readFileSync(
     "utf8"
 );
 
-function createInventoryContext({ failWrites = false } = {}) {
-    const values = new Map();
-    const localStorage = {
-        getItem(key) {
-            return values.has(key) ? values.get(key) : null;
-        },
-        setItem(key, value) {
-            if (failWrites) throw new Error("Storage is unavailable");
-            values.set(key, String(value));
-        }
-    };
-    const context = vm.createContext({ localStorage });
+function createInventoryContext() {
+    const context = vm.createContext({});
     vm.runInContext(inventorySource, context);
 
     return {
@@ -31,17 +21,35 @@ function createInventoryContext({ failWrites = false } = {}) {
     };
 }
 
-test("restocks a selected size and saves the updated stock", () => {
-    const inventory = createInventoryContext();
+test("storefront prices match the prices the database charges", () => {
+    const sql = fs.readFileSync(
+        path.join(__dirname, "..", "supabase", "order-schema.sql"),
+        "utf8"
+    );
+    const priceBlock = sql.match(/unit_price := case product_id([\s\S]*?)end;/);
+    assert.ok(priceBlock, "price case block not found in order-schema.sql");
 
-    const updatedStock = inventory.read("restockProduct(1, 'XL', 2)");
-    const savedStock = JSON.parse(inventory.read("localStorage.getItem(STOCK_STORAGE_KEY)"));
+    const sqlPrices = {};
+    for (const [, id, price] of priceBlock[1].matchAll(/when (\d+) then (\d+)/g)) {
+        sqlPrices[id] = Number(price);
+    }
 
-    assert.equal(updatedStock, 2);
-    assert.equal(savedStock[1].XL, 2);
+    const jsPrices = {};
+    for (const product of createInventoryContext().read("products")) {
+        jsPrices[product.id] = product.price;
+    }
+
+    assert.deepEqual(jsPrices, sqlPrices);
 });
 
-test("syncs storefront stock from the database and persists the latest quantities", async () => {
+test("shows zero stock until the database stock is loaded", () => {
+    const inventory = createInventoryContext();
+
+    assert.equal(inventory.read("getProductStock(1, 'S')"), 0);
+    assert.equal(inventory.read("getProductTotalStock(products[0])"), 0);
+});
+
+test("syncs storefront stock from the database", async () => {
     const inventory = createInventoryContext();
     const rows = inventory.read(`products.flatMap((product) => (
         getStockKeys(product).map((size) => ({ product_id: product.id, size, stock: 7 }))
@@ -63,9 +71,6 @@ test("syncs storefront stock from the database and persists the latest quantitie
 
     assert.equal(inventory.read("getProductStock(1, 'S')"), 7);
     assert.equal(inventory.read("getProductStock(11)"), 7);
-    const savedStock = JSON.parse(inventory.read("localStorage.getItem(STOCK_STORAGE_KEY)"));
-    assert.equal(savedStock[1].S, 7);
-    assert.equal(savedStock[11].onesize, 7);
 
     client.from = () => ({
         select: () => Promise.resolve({ data: [...rows].reverse(), error: null })
@@ -93,24 +98,5 @@ test("rejects incomplete database stock without changing the current stock", asy
         inventory.read("syncProductStockFromSupabase")(client),
         /ข้อมูลสต๊อกในฐานข้อมูลไม่ครบ/
     );
-    assert.equal(inventory.read("getProductStock(1, 'S')"), originalStock);
-});
-
-test("rejects invalid quantities, products, and sizes without changing stock", () => {
-    const inventory = createInventoryContext();
-    const originalStock = inventory.read("getProductStock(1, 'S')");
-
-    assert.throws(() => inventory.read("restockProduct(1, 'S', 0)"), /จำนวน/);
-    assert.throws(() => inventory.read("restockProduct(1, 'S', 1.5)"), /จำนวน/);
-    assert.throws(() => inventory.read("restockProduct(999, 'S', 1)"), /สินค้า/);
-    assert.throws(() => inventory.read("restockProduct(1, 'XXL', 1)"), /ไซส์/);
-    assert.equal(inventory.read("getProductStock(1, 'S')"), originalStock);
-});
-
-test("restores in-memory stock and reports an error when persistence fails", () => {
-    const inventory = createInventoryContext({ failWrites: true });
-    const originalStock = inventory.read("getProductStock(1, 'S')");
-
-    assert.throws(() => inventory.read("restockProduct(1, 'S', 3)"), /บันทึกสต๊อก/);
     assert.equal(inventory.read("getProductStock(1, 'S')"), originalStock);
 });

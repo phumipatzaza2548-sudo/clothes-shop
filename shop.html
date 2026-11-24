@@ -37,10 +37,6 @@
                 <span class="ui-icon ui-icon-truck" aria-hidden="true"></span>
             </span>
             <p><strong>ส่งฟรีทั่วไทย</strong><span>เมื่อช้อปครบ ฿500</span></p>
-            <a href="#products" onclick="selectCategory('all'); return false;">
-                ช้อปเลย
-                <span class="ui-icon ui-icon-chevron-right" aria-hidden="true"></span>
-            </a>
         </div>
     </div>
 
@@ -64,6 +60,8 @@
             </nav>
 
             <div class="header-actions">
+                <button type="button" class="theme-toggle-btn lang-toggle-btn" data-lang-toggle onclick="toggleLanguage()">EN</button>
+
                 <button
                     type="button"
                     class="theme-toggle-btn"
@@ -159,15 +157,7 @@
                             ช้อปเลย
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
                         </a>
-                        <button class="btn-ghost" onclick="selectCategory('all')">ดูสินค้าทั้งหมด</button>
                     </div>
-
-                    <p class="hero-note">
-                        <span class="hero-note-icon">
-                            <span class="ui-icon ui-icon-truck" aria-hidden="true"></span>
-                        </span>
-                        <span><strong>ส่งฟรีทั่วไทย</strong> เมื่อช้อปครบ ฿500</span>
-                    </p>
                 </div>
 
                 <div class="hero-visual" aria-hidden="true">
@@ -601,6 +591,7 @@
     <!-- Toast แจ้งเตือนเพิ่มสินค้า -->
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+    <script src="i18n.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="supabase-auth.js"></script>

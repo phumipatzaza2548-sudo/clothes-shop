@@ -182,27 +182,6 @@ svg {
     height: 14px;
 }
 
-.shipping-promo a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.15rem;
-    padding-bottom: 1px;
-    border-bottom: 1px solid rgba(27, 23, 16, 0.35);
-    color: #1b1710;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.shipping-promo a .ui-icon {
-    width: 14px;
-    height: 14px;
-    transition: transform 0.2s ease;
-}
-
-.shipping-promo a:hover .ui-icon {
-    transform: translateX(2px);
-}
-
 /* ==================== Header ==================== */
 .site-header {
     position: sticky;
@@ -351,6 +330,33 @@ html[data-theme="light"] .theme-toggle-btn .theme-icon-sun {
 
 html[data-theme="light"] .theme-toggle-btn .theme-icon-moon {
     display: block;
+}
+
+/* ปุ่มเปลี่ยนภาษา ใช้รูปทรงเดียวกับปุ่มธีม */
+.lang-toggle-btn {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.auth-panel {
+    position: relative;
+}
+
+/* หน้าล็อกอิน/สมัครใช้พื้นกระดาษสีอ่อน จึงใช้สีหมึกแทนสีของธีม */
+.auth-lang-toggle {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    z-index: 1;
+    border-color: var(--paper-line-strong);
+    color: var(--ink-soft);
+}
+
+.auth-lang-toggle:hover {
+    background: var(--paper-2);
+    border-color: var(--ink-faint);
+    color: var(--ink);
 }
 
 .cart-btn {
@@ -650,8 +656,7 @@ html[data-theme="light"] .theme-toggle-btn .theme-icon-moon {
     margin-top: 2rem;
 }
 
-.btn-primary,
-.btn-ghost {
+.btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -689,51 +694,6 @@ html[data-theme="light"] .theme-toggle-btn .theme-icon-moon {
 
 .btn-primary:hover svg {
     transform: translateX(3px);
-}
-
-.btn-ghost {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--line-strong);
-}
-
-.btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-}
-
-.hero-copy > .hero-note {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-top: 1.5rem;
-    padding: 0.38rem 0.8rem 0.38rem 0.4rem;
-    background: rgba(255, 255, 255, 0.045);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-pill);
-    color: var(--muted-2);
-    font-size: 0.8rem;
-}
-
-.hero-note strong {
-    color: var(--text);
-    font-weight: 600;
-}
-
-.hero-note-icon {
-    width: 28px;
-    height: 28px;
-    display: grid;
-    place-items: center;
-    background: var(--white);
-    color: var(--ink);
-    border-radius: 50%;
-}
-
-.hero-note .ui-icon {
-    width: 15px;
-    height: 15px;
 }
 
 .hero-visual {
@@ -2458,8 +2418,7 @@ textarea.address-input-box {
         gap: 0.6rem;
     }
 
-    .btn-primary,
-    .btn-ghost {
+    .btn-primary {
         padding: 0.72rem 1.25rem;
         font-size: 0.88rem;
     }
@@ -4908,11 +4867,6 @@ html[data-theme="light"] .hero-eyebrow::before {
     background: #111111;
 }
 
-html[data-theme="light"] .btn-ghost:hover {
-    background: rgba(23, 23, 23, 0.06);
-    border-color: rgba(23, 23, 23, 0.32);
-}
-
 html[data-theme="light"] .hero-float {
     background: rgba(255, 253, 248, 0.95);
     color: #111111;
@@ -4974,15 +4928,6 @@ html[data-theme="light"] .size-chip.is-sold-out:hover {
 
 html[data-theme="light"] .product-media {
     background: #ffffff;
-}
-
-html[data-theme="light"] .hero-note {
-    background: rgba(255, 255, 255, 0.72);
-}
-
-html[data-theme="light"] .hero-note-icon {
-    background: #171717;
-    color: #ffffff;
 }
 
 html[data-theme="light"] .footer-contact-list a:hover,

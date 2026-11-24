@@ -467,11 +467,11 @@
         document.documentElement.lang = currentLang;
         applyToTree(document.documentElement);
 
-        // ปุ่มแสดงภาษาที่จะสลับไป ป้ายไม่อยู่ในพจนานุกรมจึงไม่ถูกแปลซ้ำ
+        // ปุ่มแสดงภาษาที่ใช้อยู่ตอนนี้ ส่วน aria-label/title บอกว่ากดแล้วจะเปลี่ยนเป็นภาษาอะไร
         const isEnglish = currentLang === "en";
         const label = isEnglish ? "เปลี่ยนเป็นภาษาไทย" : "Switch to English";
         document.querySelectorAll("[data-lang-toggle]").forEach((button) => {
-            button.textContent = isEnglish ? "TH" : "EN";
+            button.textContent = isEnglish ? "EN" : "TH";
             button.setAttribute("aria-label", label);
             button.setAttribute("title", label);
         });

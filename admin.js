@@ -68,16 +68,6 @@ function showAdminOrderMessage(message, isError = false) {
     adminOrderMessage.classList.toggle("is-visible", Boolean(message));
 }
 
-function escapeAdminHTML(value) {
-    return String(value).replace(/[&<>"']/g, (character) => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        "\"": "&quot;",
-        "'": "&#39;"
-    })[character]);
-}
-
 function getAdminProductSizes(product) {
     return getStockKeys(product).map((size) => ({
         key: size,
@@ -118,11 +108,11 @@ function renderInventory() {
     inventoryBody.innerHTML = visibleProducts.map((product) => {
         const sizes = getAdminProductSizes(product);
         const sizeOptions = sizes.map((size) => (
-            `<option value="${escapeAdminHTML(size.key)}">${escapeAdminHTML(size.label)}</option>`
+            `<option value="${escapeHTML(size.key)}">${escapeHTML(size.label)}</option>`
         )).join("");
         const stockLabels = sizes.map((size) => (
             `<li class="${size.stock === 0 ? "is-empty" : size.stock <= 2 ? "is-low" : ""}">
-                <span>${escapeAdminHTML(size.label)}</span>
+                <span>${escapeHTML(size.label)}</span>
                 <strong>${Number(size.stock).toLocaleString("th-TH")}${size.stock === 0 ? " · หมด" : ""}</strong>
             </li>`
         )).join("");
@@ -131,17 +121,17 @@ function renderInventory() {
             <tr>
                 <td>
                     <div class="admin-product">
-                        <img src="${escapeAdminHTML(product.image)}" alt="" loading="lazy">
-                        <span>${escapeAdminHTML(product.name)}<small>รหัสสินค้า #${product.id}</small></span>
+                        <img src="${escapeHTML(product.image)}" alt="" loading="lazy">
+                        <span>${escapeHTML(product.name)}<small>รหัสสินค้า #${product.id}</small></span>
                     </div>
                 </td>
-                <td>${escapeAdminHTML(CATEGORY_LABELS[product.category] || product.category)}</td>
+                <td>${escapeHTML(CATEGORY_LABELS[product.category] || product.category)}</td>
                 <td><ul class="admin-stock-list">${stockLabels}</ul></td>
                 <td>
                     <form class="admin-restock-form" data-product-id="${product.id}">
-                        <label class="sr-only" for="restock-size-${product.id}">ไซส์สินค้า ${escapeAdminHTML(product.name)}</label>
+                        <label class="sr-only" for="restock-size-${product.id}">ไซส์สินค้า ${escapeHTML(product.name)}</label>
                         <select id="restock-size-${product.id}" name="size">${sizeOptions}</select>
-                        <label class="sr-only" for="restock-quantity-${product.id}">จำนวนที่เติม ${escapeAdminHTML(product.name)}</label>
+                        <label class="sr-only" for="restock-quantity-${product.id}">จำนวนที่เติม ${escapeHTML(product.name)}</label>
                         <input id="restock-quantity-${product.id}" name="quantity" type="number" min="1" max="10000" step="1" value="1" required>
                         <button type="submit">เติม</button>
                     </form>
@@ -152,32 +142,7 @@ function renderInventory() {
 }
 
 async function loadInventory() {
-    const { data, error } = await supabaseClient
-        .from("product_stock")
-        .select("product_id, size, stock");
-
-    if (error) throw new Error("โหลดสต๊อกไม่ได้ กรุณาตรวจสอบการตั้งค่าฐานข้อมูล");
-
-    const nextStock = {};
-    for (const row of data || []) {
-        const product = products.find((item) => item.id === row.product_id);
-        if (!product || !getStockKeys(product).includes(row.size)
-            || !Number.isSafeInteger(row.stock) || row.stock < 0) {
-            throw new Error("ข้อมูลสต๊อกในฐานข้อมูลไม่ถูกต้อง");
-        }
-        nextStock[row.product_id] = nextStock[row.product_id] || {};
-        nextStock[row.product_id][row.size] = row.stock;
-    }
-
-    for (const product of products) {
-        for (const size of getStockKeys(product)) {
-            if (!Number.isSafeInteger(nextStock[product.id]?.[size])) {
-                throw new Error("ข้อมูลสต๊อกในฐานข้อมูลไม่ครบ กรุณารันสคริปต์ตั้งค่าฐานข้อมูล");
-            }
-        }
-    }
-
-    adminProductStock = nextStock;
+    adminProductStock = await fetchProductStock(supabaseClient);
     renderInventory();
 }
 
@@ -197,7 +162,7 @@ async function loadPendingOrders() {
     }
 
     for (const order of orders) {
-        if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(order.id)
+        if (!ORDER_ID_PATTERN.test(order.id)
             || order.status !== "pending"
             || !["kbank", "scb"].includes(order.bank)
             || !Number.isSafeInteger(order.total_amount) || order.total_amount < 1
@@ -209,51 +174,22 @@ async function loadPendingOrders() {
         }
     }
 
-    const orderIds = orders.map((order) => order.id);
-    const { data: orderItems, error: itemError } = await supabaseClient
-        .from("store_order_items")
-        .select("order_id, product_id, size, quantity, unit_price")
-        .in("order_id", orderIds);
-
-    if (itemError) throw new Error("โหลดรายการสินค้าในคำสั่งซื้อไม่ได้");
-
-    const itemsByOrder = new Map();
-    for (const item of orderItems || []) {
-        const product = products.find((entry) => entry.id === item.product_id);
-        if (!orderIds.includes(item.order_id)
-            || !product || !getStockKeys(product).includes(item.size)
-            || !Number.isSafeInteger(item.quantity) || item.quantity < 1
-            || !Number.isSafeInteger(item.unit_price) || item.unit_price < 1) {
-            throw new Error("ข้อมูลคำสั่งซื้อในฐานข้อมูลไม่ถูกต้อง");
-        }
-        const items = itemsByOrder.get(item.order_id) || [];
-        items.push({ ...item, product });
-        itemsByOrder.set(item.order_id, items);
-    }
+    const itemsByOrder = await loadOrderItems(supabaseClient, orders);
 
     const cards = await Promise.all(orders.map(async (order) => {
-        const lines = itemsByOrder.get(order.id) || [];
-        if (lines.length === 0) throw new Error("คำสั่งซื้อไม่มีรายการสินค้า");
-        const calculatedTotal = lines.reduce(
-            (total, item) => total + item.unit_price * item.quantity,
-            0
-        );
-        if (calculatedTotal !== order.total_amount) {
-            throw new Error("ยอดรวมคำสั่งซื้อไม่ตรงกับรายการสินค้า");
-        }
-
+        const lines = itemsByOrder.get(order.id);
         const isSlipExpired = Date.parse(order.slip_expires_at) <= Date.now();
         let slipMarkup = '<p class="admin-order-slip-expired">ไม่พบสลิปที่เปิดดูได้</p>';
         if (order.slip_path && !isSlipExpired) {
             const { data, error } = await supabaseClient.storage
                 .from("payment-slips")
-                .createSignedUrl(order.slip_path, 60);
+                .createSignedUrl(order.slip_path, 600);
             if (error || !data?.signedUrl) {
                 throw new Error("เปิดดูสลิปไม่ได้ กรุณาตรวจสอบสิทธิ์ Storage");
             }
             slipMarkup = `
-                <a class="admin-order-slip" href="${escapeAdminHTML(data.signedUrl)}" target="_blank" rel="noopener">
-                    <img src="${escapeAdminHTML(data.signedUrl)}" alt="สลิปคำสั่งซื้อ ${escapeAdminHTML(order.id.slice(0, 8))}">
+                <a class="admin-order-slip" href="${escapeHTML(data.signedUrl)}" target="_blank" rel="noopener">
+                    <img src="${escapeHTML(data.signedUrl)}" alt="สลิปคำสั่งซื้อ ${escapeHTML(order.id.slice(0, 8))}">
                     <span>เปิดสลิป</span>
                 </a>
             `;
@@ -261,7 +197,7 @@ async function loadPendingOrders() {
 
         const itemMarkup = lines.map((item) => `
             <li>
-                <span>${escapeAdminHTML(item.product.name)} · ${escapeAdminHTML(item.size)} × ${item.quantity}</span>
+                <span>${escapeHTML(item.product.name)} · ${escapeHTML(item.size)} × ${item.quantity}</span>
                 <strong>${(item.unit_price * item.quantity).toLocaleString("th-TH")} บาท</strong>
             </li>
         `).join("");
@@ -271,9 +207,9 @@ async function loadPendingOrders() {
             ${canApprove ? "" : '<p class="admin-order-slip-expired">สลิปหมดอายุหรือไม่มีไฟล์ กรุณาติดต่อผู้ซื้อ</p>'}
             <div class="admin-order-actions">
                 ${canApprove
-                    ? `<button type="button" data-order-action="approve" data-order-id="${escapeAdminHTML(order.id)}">อนุมัติและหักสต๊อก</button>`
+                    ? `<button type="button" data-order-action="approve" data-order-id="${escapeHTML(order.id)}">อนุมัติและหักสต๊อก</button>`
                     : ""}
-                <button type="button" data-order-action="reject" data-order-id="${escapeAdminHTML(order.id)}">ปฏิเสธคำสั่งซื้อ</button>
+                <button type="button" data-order-action="reject" data-order-id="${escapeHTML(order.id)}">ปฏิเสธคำสั่งซื้อ</button>
             </div>
         `;
 
@@ -281,9 +217,9 @@ async function loadPendingOrders() {
             <article class="admin-order-card">
                 <div class="admin-order-card-heading">
                     <div>
-                        <strong>คำสั่งซื้อ ${escapeAdminHTML(order.id.slice(0, 8).toUpperCase())}</strong>
-                        <span class="admin-order-customer">${escapeAdminHTML(order.customer_name || "ไม่ระบุชื่อ")}</span>
-                        <time datetime="${escapeAdminHTML(order.created_at)}">${escapeAdminHTML(dateLabel)}</time>
+                        <strong>คำสั่งซื้อ ${escapeHTML(order.id.slice(0, 8).toUpperCase())}</strong>
+                        <span class="admin-order-customer">${escapeHTML(order.customer_name || "ไม่ระบุชื่อ")}</span>
+                        <time datetime="${escapeHTML(order.created_at)}">${escapeHTML(dateLabel)}</time>
                     </div>
                     <span>${order.bank === "kbank" ? "กสิกรไทย" : "ไทยพาณิชย์"}</span>
                 </div>

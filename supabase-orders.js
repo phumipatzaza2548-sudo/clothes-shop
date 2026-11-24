@@ -109,5 +109,49 @@
         return { data, slipPath };
     }
 
+    // โหลดรายการสินค้าของคำสั่งซื้อ ตรวจข้อมูล และเช็กว่ายอดรวมตรงกับ total_amount
+    // คืนค่า Map: order id → [{ order_id, product_id, size, quantity, unit_price, product }]
+    async function loadOrderItems(supabaseClient, orders) {
+        const itemsByOrder = new Map();
+        if (orders.length === 0) return itemsByOrder;
+
+        const orderIds = orders.map((order) => order.id);
+        const { data, error } = await supabaseClient
+            .from("store_order_items")
+            .select("order_id, product_id, size, quantity, unit_price")
+            .in("order_id", orderIds);
+        if (error) throw new Error("โหลดรายการสินค้าในคำสั่งซื้อไม่สำเร็จ");
+
+        for (const item of data || []) {
+            const product = products.find((entry) => entry.id === item.product_id);
+            if (!orderIds.includes(item.order_id)
+                || !product || !getStockKeys(product).includes(item.size)
+                || !Number.isSafeInteger(item.quantity) || item.quantity < 1
+                || !Number.isSafeInteger(item.unit_price) || item.unit_price < 1) {
+                throw new Error("ข้อมูลรายการคำสั่งซื้อไม่ถูกต้อง");
+            }
+            const items = itemsByOrder.get(item.order_id) || [];
+            items.push({ ...item, product });
+            itemsByOrder.set(item.order_id, items);
+        }
+
+        for (const order of orders) {
+            const items = itemsByOrder.get(order.id) || [];
+            const total = items.reduce((sum, item) => sum + item.unit_price * item.quantity, 0);
+            if (items.length === 0 || total !== order.total_amount) {
+                throw new Error("ยอดรวมคำสั่งซื้อไม่ตรงกับรายการสินค้า");
+            }
+        }
+
+        return itemsByOrder;
+    }
+
+    global.ORDER_ID_PATTERN = ORDER_ID_PATTERN;
+    global.ORDER_STATUS_LABELS = {
+        pending: "รอแอดมินตรวจสอบ",
+        approved: "อนุมัติแล้ว",
+        rejected: "ปฏิเสธคำสั่งซื้อ"
+    };
+    global.loadOrderItems = loadOrderItems;
     global.submitStoreOrder = submitStoreOrder;
 })(window);

@@ -180,3 +180,31 @@ test("removes an uploaded slip when the database rejects the order", async () =>
         [`${CUSTOMER_ID}/${orderId}.png`]
     );
 });
+
+test("loads order items grouped by order and rejects totals that do not match", async () => {
+    const context = vm.createContext({ console: { error() {} } });
+    context.window = context;
+    vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "inventory.js"), "utf8"), context);
+    vm.runInContext(ordersSource, context);
+
+    const rows = [
+        { order_id: "a", product_id: 1, size: "M", quantity: 2, unit_price: 150 },
+        { order_id: "a", product_id: 11, size: "onesize", quantity: 1, unit_price: 250 }
+    ];
+    const client = {
+        from(table) {
+            assert.equal(table, "store_order_items");
+            return { select: () => ({ in: async () => ({ data: rows, error: null }) }) };
+        }
+    };
+
+    const itemsByOrder = await context.loadOrderItems(client, [{ id: "a", total_amount: 550 }]);
+    assert.equal(itemsByOrder.get("a").length, 2);
+    assert.equal(itemsByOrder.get("a")[1].product.name, "หมวกแก๊ปขาว");
+
+    await assert.rejects(
+        context.loadOrderItems(client, [{ id: "a", total_amount: 999 }]),
+        /ยอดรวม/
+    );
+    assert.equal((await context.loadOrderItems(client, [])).size, 0);
+});

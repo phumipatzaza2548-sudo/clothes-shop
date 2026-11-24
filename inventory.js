@@ -79,102 +79,13 @@ function getProductSizes(product) {
 }
 
 /* ==================== สต็อกสินค้า ==================== */
-const STOCK_STORAGE_KEY = "shop_stock_v1";
-
-const DEFAULT_PRODUCT_STOCK = {
-    1: { S: 6, M: 8, L: 8, XL: 0 },
-    2: { S: 5, M: 7, L: 7, XL: 3 },
-    3: { S: 4, M: 6, L: 6, XL: 2 },
-    4: { S: 4, M: 5, L: 3, XL: 2 },
-    5: { S: 2, M: 4, L: 4, XL: 2 },
-    6: { S: 5, M: 5, L: 4, XL: 2 },
-    7: { S: 6, M: 6, L: 5, XL: 3 },
-    8: { 28: 4, 30: 5, 32: 5, 34: 4, 36: 2 },
-    9: { 28: 5, 30: 6, 32: 7, 34: 5, 36: 3 },
-    10: { 28: 3, 30: 4, 32: 4, 34: 2, 36: 0 },
-    11: { onesize: 9 },
-    12: { onesize: 6 },
-    13: { onesize: 5 },
-    14: { onesize: 2 },
-    15: { S: 8, M: 10, L: 9, XL: 4 },
-    16: { S: 3, M: 5, L: 4, XL: 2 },
-    17: { S: 6, M: 7, L: 5, XL: 3 },
-    18: { 28: 4, 30: 6, 32: 6, 34: 4, 36: 2 },
-    19: { 28: 3, 30: 5, 32: 5, 34: 3, 36: 0 },
-    20: { 38: 2, 39: 4, 40: 5, 41: 4, 42: 3, 43: 2, 44: 0 },
-    21: { 38: 3, 39: 4, 40: 4, 41: 3, 42: 2, 43: 1, 44: 1 },
-    22: { 38: 0, 39: 2, 40: 3, 41: 3, 42: 2, 43: 2, 44: 1 },
-    23: { 38: 2, 39: 3, 40: 4, 41: 4, 42: 3, 43: 2, 44: 1 },
-    24: { 38: 3, 39: 5, 40: 5, 41: 4, 42: 3, 43: 2, 44: 0 }
-};
-
-function createDefaultStock() {
-    const stock = {};
-    products.forEach((product) => {
-        stock[product.id] = { ...(DEFAULT_PRODUCT_STOCK[product.id] || {}) };
-    });
-    return stock;
-}
-
 function getStockKeys(product) {
     const sizes = getProductSizes(product);
     return sizes.length > 0 ? sizes : ["onesize"];
 }
 
-function normalizeProductStock(rawStock) {
-    const defaults = createDefaultStock();
-    if (!rawStock || typeof rawStock !== "object") return defaults;
-
-    const normalized = {};
-    products.forEach((product) => {
-        normalized[product.id] = {};
-        getStockKeys(product).forEach((key) => {
-            const fallback = Math.max(0, Number(defaults[product.id]?.[key]) || 0);
-            const rawValue = rawStock[product.id]?.[key];
-            const numericValue = Number(rawValue);
-            const isValid = rawValue !== undefined
-                && rawValue !== null
-                && rawValue !== ""
-                && Number.isFinite(numericValue);
-
-            normalized[product.id][key] = isValid
-                ? Math.max(0, Math.floor(numericValue))
-                : fallback;
-        });
-    });
-
-    return normalized;
-}
-
-function loadProductStock() {
-    let storedStock = null;
-
-    try {
-        storedStock = JSON.parse(localStorage.getItem(STOCK_STORAGE_KEY) || "null");
-    } catch {
-        storedStock = null;
-    }
-
-    const stock = normalizeProductStock(storedStock);
-
-    try {
-        localStorage.setItem(STOCK_STORAGE_KEY, JSON.stringify(stock));
-    } catch {
-        // ใช้งานต่อได้แม้เบราว์เซอร์ไม่ให้บันทึก localStorage
-    }
-
-    return stock;
-}
-
-let productStock = loadProductStock();
-
-function saveProductStock() {
-    try {
-        localStorage.setItem(STOCK_STORAGE_KEY, JSON.stringify(productStock));
-    } catch {
-        // ใช้งานต่อได้แม้เบราว์เซอร์ไม่ให้บันทึก localStorage
-    }
-}
+// สต๊อกจริงอยู่ใน Supabase เท่านั้น ก่อนโหลดเสร็จจะถือว่าเป็น 0
+let productStock = {};
 
 function getProductStock(productId, size = "") {
     const product = products.find((item) => item.id === productId);
@@ -193,7 +104,8 @@ function getProductTotalStock(product) {
     );
 }
 
-async function syncProductStockFromSupabase(supabaseClient) {
+// ใช้ร่วมกันทั้งหน้าร้านและหน้าแอดมิน: ดึงสต๊อกทั้งหมดและตรวจว่าครบทุกสินค้า/ไซส์
+async function fetchProductStock(supabaseClient) {
     if (!supabaseClient || typeof supabaseClient.from !== "function") {
         throw new Error("ไม่สามารถเชื่อมต่อฐานข้อมูลสต๊อกได้");
     }
@@ -227,55 +139,28 @@ async function syncProductStockFromSupabase(supabaseClient) {
         }
     }
 
+    return nextStock;
+}
+
+async function syncProductStockFromSupabase(supabaseClient) {
+    const nextStock = await fetchProductStock(supabaseClient);
     const hasChanged = products.some((product) => getStockKeys(product).some((size) => (
         productStock[product.id]?.[size] !== nextStock[product.id][size]
     )));
     productStock = nextStock;
-    saveProductStock();
     return hasChanged;
+}
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    }[char]));
 }
 
 function getCartItemStock(item) {
     return getProductStock(item.id, item.size || "");
-}
-
-function decrementProductStock(item) {
-    const product = products.find((entry) => entry.id === item.id);
-    if (!product) return;
-
-    const key = getProductSizes(product).length > 0 ? String(item.size || "") : "onesize";
-    if (!key) return;
-
-    const currentEntry = productStock[item.id] || {};
-    currentEntry[key] = Math.max(0, (Number(currentEntry[key]) || 0) - (item.qty || 1));
-    productStock[item.id] = currentEntry;
-}
-
-function restockProduct(productId, size, quantity) {
-    const product = products.find((item) => item.id === Number(productId));
-    if (!product) throw new Error("ไม่พบสินค้า");
-
-    const stockKey = getStockKeys(product).find((key) => key === String(size));
-    if (!stockKey) throw new Error("ไม่พบไซส์สินค้าที่เลือก");
-
-    const amount = Number(quantity);
-    if (!Number.isSafeInteger(amount) || amount <= 0) {
-        throw new Error("จำนวนสินค้าที่เติมต้องเป็นจำนวนเต็มมากกว่า 0");
-    }
-
-    const previousStock = getProductStock(product.id, stockKey);
-    const updatedStock = previousStock + amount;
-    if (!Number.isSafeInteger(updatedStock)) {
-        throw new Error("จำนวนสต๊อกเกินค่าที่รองรับ");
-    }
-
-    productStock[product.id][stockKey] = updatedStock;
-    try {
-        localStorage.setItem(STOCK_STORAGE_KEY, JSON.stringify(productStock));
-    } catch {
-        productStock[product.id][stockKey] = previousStock;
-        throw new Error("ไม่สามารถบันทึกสต๊อกสินค้าได้ กรุณาลองใหม่อีกครั้ง");
-    }
-
-    return updatedStock;
 }
